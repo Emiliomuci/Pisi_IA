@@ -615,13 +615,14 @@
             <h2>Hola, soy Pisi</h2>
             <p>Tu asistente de IA personal, creado por Emilio. Conectame a Groq para respuestas inteligentes.</p>
             
+            
+
             <div class="setup-card" id="setupCard">
-                <h3>Configurar API de Groq (Gratis)</h3>
-                <p>Para que funcione correctamente, necesito una API key de Groq. Es gratis y toma 30 segundos:</p>
-                <p><a href="https://console.groq.com/keys" target="_blank">1. Crea tu cuenta en Groq (gratis)</a></p>
-                <p>2. Copia tu API key y pegala aqui:</p>
+                <h3>Conectar con Groq</h3>
+                <p>Pega tu API key de Groq:</p>
                 <input type="password" id="setupApiKey" placeholder="gsk_xxxxxxxxxxxxxxxx">
-                <button onclick="saveApiKeyFromSetup()">Conectar Pisi</button>
+                <button onclick="saveApiKeyFromSetup()">Conectar</button>
+                <p style="margin-top:10px;"><a href="https://console.groq.com/keys" target="_blank">Obtener API key gratis</a></p>
             </div>
 
             <div class="suggestions" id="suggestions" style="display:none;">
@@ -659,10 +660,12 @@
             <div class="modal-field">
                 <label>Modelo de IA</label>
                 <select id="settingsModel" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);color:#fff;font-size:14px;outline:none;">
-                    <option value="llama-3.3-70b-versatile">Llama 3.3 70B (Recomendado)</option>
+                    <option value="moonshotai/kimi-k2-instruct">Kimi K2 (Recomendado)</option>
+                    <option value="llama-3.3-70b-versatile">Llama 3.3 70B</option>
                     <option value="llama-3.1-8b-instant">Llama 3.1 8B (Rapido)</option>
                     <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
                     <option value="gemma2-9b-it">Gemma 2 9B</option>
+                    <option value="compound-beta">Compound Beta (Agente)</option>
                 </select>
             </div>
 
@@ -749,9 +752,14 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
         function loadConfig() {
             try {
                 const saved = localStorage.getItem(STORAGE_KEY);
-                return saved ? JSON.parse(saved) : { apiKey: '', model: 'llama-3.3-70b-versatile', userName: '' };
+                const defaultConfig = { 
+                    apiKey: '', 
+                    model: 'moonshotai/kimi-k2-instruct', 
+                    userName: '' 
+                };
+                return saved ? { ...defaultConfig, ...JSON.parse(saved) } : defaultConfig;
             } catch {
-                return { apiKey: '', model: 'llama-3.3-70b-versatile', userName: '' };
+                return { apiKey: '', model: 'moonshotai/kimi-k2-instruct', userName: '' };
             }
         }
 
@@ -974,10 +982,12 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
 
         function getModelShortName(model) {
             const names = {
+                'moonshotai/kimi-k2-instruct': 'Kimi K2',
                 'llama-3.3-70b-versatile': 'Llama 3.3',
                 'llama-3.1-8b-instant': 'Llama 3.1',
                 'mixtral-8x7b-32768': 'Mixtral',
-                'gemma2-9b-it': 'Gemma 2'
+                'gemma2-9b-it': 'Gemma 2',
+                'compound-beta': 'Compound'
             };
             return names[model] || model;
         }
