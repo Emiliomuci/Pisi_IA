@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pisi - Tu Asistente Personal</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#667eea">
+    <title>Pisi - Asistente con IA</title>
+    <meta name="theme-color" content="#1a1a2e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Pisi">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             display: flex;
@@ -36,33 +31,25 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .header h1 {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .header .status {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-top: 5px;
-        }
+        .header h1 { font-size: 22px; font-weight: 600; }
+        .header .status { font-size: 11px; opacity: 0.7; margin-top: 4px; }
 
         .chat-container {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .message {
-            max-width: 90%;
-            padding: 14px 18px;
+            max-width: 92%;
+            padding: 12px 16px;
             border-radius: 16px;
             animation: fadeIn 0.3s ease;
             line-height: 1.6;
-            white-space: pre-wrap;
+            font-size: 15px;
         }
 
         @keyframes fadeIn {
@@ -85,7 +72,7 @@
         }
 
         .message.pisi .name {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 12px;
             margin-bottom: 8px;
             color: #4a6cf7;
@@ -115,8 +102,7 @@
 
         .input-container {
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            padding: 15px;
+            padding: 12px;
             display: flex;
             gap: 10px;
             position: sticky;
@@ -126,7 +112,7 @@
 
         .input-container input {
             flex: 1;
-            padding: 14px 20px;
+            padding: 14px 18px;
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 25px;
             font-size: 16px;
@@ -135,9 +121,7 @@
             color: white;
         }
 
-        .input-container input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
+        .input-container input::placeholder { color: rgba(255,255,255,0.5); }
 
         .input-container button {
             width: 50px;
@@ -146,70 +130,49 @@
             border-radius: 50%;
             background: #4a6cf7;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
         }
 
-        .input-container button:active {
-            transform: scale(0.95);
-        }
-
-        .input-container button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .input-container button:disabled { opacity: 0.5; }
 
         .welcome {
             text-align: center;
             color: white;
-            padding: 40px 20px;
+            padding: 30px 20px;
         }
 
         .welcome .icon {
-            font-size: 40px;
-            margin-bottom: 20px;
+            font-size: 36px;
             background: linear-gradient(135deg, #4a6cf7, #7c3aed);
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
             font-weight: bold;
         }
 
-        .welcome h2 {
-            margin-bottom: 10px;
-        }
-
-        .welcome p {
-            opacity: 0.7;
-            font-size: 14px;
-        }
+        .welcome p { opacity: 0.7; font-size: 13px; margin-top: 8px; }
 
         .suggestions {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .suggestion {
             background: rgba(74, 108, 247, 0.3);
             color: white;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 13px;
+            padding: 8px 14px;
+            border-radius: 18px;
+            font-size: 12px;
             cursor: pointer;
-            transition: background 0.2s;
             border: 1px solid rgba(74, 108, 247, 0.5);
-        }
-
-        .suggestion:hover {
-            background: rgba(74, 108, 247, 0.5);
         }
 
         .clear-btn {
@@ -222,28 +185,47 @@
             color: white;
             opacity: 0.7;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        .header {
-            position: relative;
-        }
+        .header { position: relative; }
 
         @media (display-mode: standalone) {
-            .header {
-                padding-top: 50px;
-            }
+            .header { padding-top: 45px; }
         }
 
-        .message-content strong {
-            color: #6d8cff;
+        .message-content { white-space: pre-wrap; }
+        .message-content strong { color: #6d8cff; }
+        
+        .source-link {
+            display: block;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-size: 12px;
+            color: #8b9dff;
+        }
+        
+        .source-link a {
+            color: #8b9dff;
+            text-decoration: none;
+        }
+        
+        .source-link a:hover {
+            text-decoration: underline;
+        }
+
+        .searching {
+            font-size: 12px;
+            color: #8b9dff;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Pisi</h1>
-        <div class="status">Asistente de IA Personal</div>
+        <div class="status">Busqueda en internet activada</div>
         <button class="clear-btn" onclick="clearChat()">Limpiar</button>
     </div>
 
@@ -251,17 +233,18 @@
         <div class="welcome" id="welcome">
             <div class="icon">P</div>
             <h2>Hola, soy Pisi</h2>
-            <p>Tu asistente personal. Puedo responder cualquier pregunta.</p>
+            <p>Busco informacion en internet y te muestro las fuentes oficiales.</p>
             <div class="suggestions">
-                <div class="suggestion" onclick="askSuggestion('Proteína en pechuga de pollo')">Nutricion</div>
-                <div class="suggestion" onclick="askSuggestion('Teoria de la relatividad')">Ciencia</div>
+                <div class="suggestion" onclick="askSuggestion('Proteina en pechuga de pollo')">Nutricion</div>
+                <div class="suggestion" onclick="askSuggestion('Albert Einstein')">Biografias</div>
                 <div class="suggestion" onclick="askSuggestion('Segunda Guerra Mundial')">Historia</div>
+                <div class="suggestion" onclick="askSuggestion('Sistema solar')">Ciencia</div>
             </div>
         </div>
     </div>
 
     <div class="input-container">
-        <input type="text" id="userInput" placeholder="Escribe tu pregunta..." autocomplete="off">
+        <input type="text" id="userInput" placeholder="Pregunta lo que quieras..." autocomplete="off">
         <button id="sendBtn" onclick="sendMessage()">&#10148;</button>
     </div>
 
@@ -270,8 +253,6 @@
         const userInput = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
         const welcome = document.getElementById('welcome');
-
-        let conversationHistory = [];
 
         userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
@@ -282,14 +263,22 @@
             sendMessage();
         }
 
-        function addMessage(content, isUser) {
+        function addMessage(content, isUser, sources = null) {
             if (welcome) welcome.style.display = 'none';
             
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isUser ? 'user' : 'pisi'}`;
             
             if (!isUser) {
-                messageDiv.innerHTML = `<div class="name">Pisi</div><div class="message-content">${formatResponse(content)}</div>`;
+                let sourceHTML = '';
+                if (sources && sources.length > 0) {
+                    sourceHTML = '<div class="source-link"><strong>Fuentes:</strong><br>';
+                    sources.forEach(s => {
+                        sourceHTML += `<a href="${s.url}" target="_blank">${s.name}</a><br>`;
+                    });
+                    sourceHTML += '</div>';
+                }
+                messageDiv.innerHTML = `<div class="name">Pisi</div><div class="message-content">${formatResponse(content)}</div>${sourceHTML}`;
             } else {
                 messageDiv.textContent = content;
             }
@@ -304,13 +293,26 @@
             return text;
         }
 
-        function showTyping() {
+        function showTyping(searchingText = '') {
             const typingDiv = document.createElement('div');
             typingDiv.className = 'message pisi typing';
             typingDiv.id = 'typing';
-            typingDiv.innerHTML = '<span></span><span></span><span></span>';
+            typingDiv.innerHTML = `<span></span><span></span><span></span>${searchingText ? `<div class="searching">${searchingText}</div>` : ''}`;
             chatContainer.appendChild(typingDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function updateTypingText(text) {
+            const typing = document.getElementById('typing');
+            if (typing) {
+                let searching = typing.querySelector('.searching');
+                if (!searching) {
+                    searching = document.createElement('div');
+                    searching.className = 'searching';
+                    typing.appendChild(searching);
+                }
+                searching.textContent = text;
+            }
         }
 
         function hideTyping() {
@@ -326,894 +328,278 @@
             sendBtn.disabled = true;
             
             addMessage(message, true);
-            showTyping();
-
-            conversationHistory.push({ role: 'user', content: message });
+            showTyping('Buscando en internet...');
 
             try {
-                const response = await getPisiResponse(message);
+                const response = await searchAndRespond(message);
                 hideTyping();
-                addMessage(response, false);
-                conversationHistory.push({ role: 'assistant', content: response });
+                addMessage(response.text, false, response.sources);
             } catch (error) {
                 hideTyping();
-                addMessage('Ocurrio un error. Intenta de nuevo.', false);
+                addMessage('Error al buscar informacion. Intenta de nuevo.', false);
             }
 
             sendBtn.disabled = false;
             userInput.focus();
         }
 
-        async function getPisiResponse(userMessage) {
-            // Primero buscar en base de conocimientos local
-            const localAnswer = getKnowledgeBaseAnswer(userMessage);
-            if (localAnswer) {
-                return localAnswer;
+        async function searchAndRespond(query) {
+            // Buscar en Wikipedia (fuente oficial y gratuita)
+            const wikiResult = await searchWikipedia(query);
+            
+            if (wikiResult.found) {
+                return {
+                    text: wikiResult.content,
+                    sources: wikiResult.sources
+                };
             }
 
-            // Si no hay respuesta local, intentar API
+            // Si no encuentra en Wikipedia, buscar en DuckDuckGo
+            const ddgResult = await searchDuckDuckGo(query);
+            
+            if (ddgResult.found) {
+                return {
+                    text: ddgResult.content,
+                    sources: ddgResult.sources
+                };
+            }
+
+            // Fallback: buscar datos nutricionales en API gratuita
+            if (query.toLowerCase().match(/proteina|calorias|nutricion|nutrientes|vitaminas/)) {
+                const nutritionResult = await searchNutrition(query);
+                if (nutritionResult.found) {
+                    return {
+                        text: nutritionResult.content,
+                        sources: nutritionResult.sources
+                    };
+                }
+            }
+
+            return {
+                text: 'No encontre informacion especifica sobre eso. Intenta con otra busqueda o se mas especifico.',
+                sources: []
+            };
+        }
+
+        async function searchWikipedia(query) {
             try {
-                const systemPrompt = `Eres Pisi, un asistente experto. Reglas:
-1. Responde SIEMPRE en espanol
-2. NO uses emojis nunca
-3. Da respuestas completas y profesionales
-4. Incluye datos y cifras especificas
-5. Organiza la informacion claramente`;
+                updateTypingText('Buscando en Wikipedia...');
                 
-                const response = await fetch('https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        inputs: `<s>[INST] ${systemPrompt}\n\nPregunta: ${userMessage} [/INST]`,
-                        parameters: {
-                            max_new_tokens: 800,
-                            temperature: 0.3,
-                            return_full_text: false
-                        }
-                    })
-                });
+                // Primero buscar el articulo
+                const searchUrl = `https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=1`;
+                const searchResponse = await fetch(searchUrl);
+                const searchData = await searchResponse.json();
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data[0] && data[0].generated_text) {
-                        let text = data[0].generated_text.trim();
-                        text = text.replace(/^\[\/INST\]\s*/g, '');
-                        // Remover emojis
-                        text = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
-                        if (text.length > 30) {
-                            return text;
+                if (!searchData.query.search.length) {
+                    // Intentar en ingles
+                    const searchUrlEn = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=1`;
+                    const searchResponseEn = await fetch(searchUrlEn);
+                    const searchDataEn = await searchResponseEn.json();
+                    
+                    if (!searchDataEn.query.search.length) {
+                        return { found: false };
+                    }
+                    
+                    // Obtener contenido en ingles y resumir
+                    const titleEn = searchDataEn.query.search[0].title;
+                    return await getWikipediaContent(titleEn, 'en');
+                }
+                
+                const title = searchData.query.search[0].title;
+                return await getWikipediaContent(title, 'es');
+                
+            } catch (error) {
+                console.log('Wikipedia error:', error);
+                return { found: false };
+            }
+        }
+
+        async function getWikipediaContent(title, lang) {
+            try {
+                updateTypingText('Obteniendo informacion...');
+                
+                const contentUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=extracts&exintro=false&explaintext=true&format=json&origin=*&exsectionformat=plain`;
+                const contentResponse = await fetch(contentUrl);
+                const contentData = await contentResponse.json();
+                
+                const pages = contentData.query.pages;
+                const pageId = Object.keys(pages)[0];
+                
+                if (pageId === '-1' || !pages[pageId].extract) {
+                    return { found: false };
+                }
+                
+                let extract = pages[pageId].extract;
+                
+                // Limpiar y formatear el contenido
+                extract = extract.replace(/\n{3,}/g, '\n\n');
+                
+                // Limitar longitud pero mantener parrafos completos
+                if (extract.length > 2000) {
+                    const paragraphs = extract.split('\n\n');
+                    let result = '';
+                    for (const p of paragraphs) {
+                        if ((result + p).length < 2000) {
+                            result += p + '\n\n';
+                        } else {
+                            break;
                         }
+                    }
+                    extract = result.trim();
+                }
+                
+                // Formatear secciones como negritas
+                extract = extract.replace(/^([A-Z][^.:\n]{3,50})$/gm, '**$1**');
+                
+                const wikiUrl = `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, '_'))}`;
+                
+                return {
+                    found: true,
+                    content: extract,
+                    sources: [
+                        { name: `Wikipedia - ${title}`, url: wikiUrl }
+                    ]
+                };
+                
+            } catch (error) {
+                return { found: false };
+            }
+        }
+
+        async function searchDuckDuckGo(query) {
+            try {
+                updateTypingText('Buscando informacion adicional...');
+                
+                const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.Abstract && data.Abstract.length > 50) {
+                    let content = data.Abstract;
+                    
+                    // Agregar datos relacionados si existen
+                    if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                        content += '\n\n**Informacion relacionada:**\n';
+                        const topics = data.RelatedTopics.slice(0, 3);
+                        for (const topic of topics) {
+                            if (topic.Text) {
+                                content += `- ${topic.Text.substring(0, 150)}...\n`;
+                            }
+                        }
+                    }
+                    
+                    const sources = [];
+                    if (data.AbstractURL) {
+                        sources.push({ name: data.AbstractSource || 'Fuente', url: data.AbstractURL });
+                    }
+                    
+                    return {
+                        found: true,
+                        content: content,
+                        sources: sources
+                    };
+                }
+                
+                // Usar Infobox si existe
+                if (data.Infobox && data.Infobox.content) {
+                    let content = '';
+                    for (const item of data.Infobox.content.slice(0, 10)) {
+                        if (item.label && item.value) {
+                            content += `**${item.label}:** ${item.value}\n`;
+                        }
+                    }
+                    
+                    if (content.length > 50) {
+                        return {
+                            found: true,
+                            content: content,
+                            sources: data.AbstractURL ? [{ name: 'DuckDuckGo', url: data.AbstractURL }] : []
+                        };
                     }
                 }
-            } catch (e) {
-                console.log('API error:', e);
+                
+                return { found: false };
+                
+            } catch (error) {
+                console.log('DuckDuckGo error:', error);
+                return { found: false };
             }
-
-            return getExtendedAnswer(userMessage);
         }
 
-        function getKnowledgeBaseAnswer(message) {
-            const msg = message.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            
-            // ==================== NUTRICION - CARNES Y PROTEINAS ====================
-            
-            if (msg.match(/prote[ií]?na.*(pollo|pechuga)|pechuga.*prote[ií]?na|pollo.*prote[ií]?na|pechuga/)) {
-                return `**Informacion nutricional de la pechuga de pollo:**
-
-Por cada 100 gramos de pechuga cocida sin piel:
-
-**Macronutrientes:**
-- Proteina: 31 gramos
-- Calorias: 165 kcal
-- Grasa total: 3.6 gramos
-- Grasa saturada: 1 gramo
-- Carbohidratos: 0 gramos
-- Colesterol: 85 mg
-
-**Por porcion tipica de 150g:**
-- Proteina: 46.5 gramos
-- Calorias: 248 kcal
-
-**Vitaminas y minerales:**
-- Niacina (B3): 13.7 mg (86% VD)
-- Vitamina B6: 0.6 mg (35% VD)
-- Vitamina B12: 0.3 mcg (13% VD)
-- Fosforo: 228 mg (33% VD)
-- Selenio: 27 mcg (49% VD)
-- Potasio: 256 mg
-
-**Valor biologico:** 79 (alto)
-
-La pechuga de pollo es una de las fuentes de proteina mas magras y eficientes. Contiene todos los aminoacidos esenciales, siendo ideal para desarrollo muscular y dietas de control de peso.`;
-            }
-
-            if (msg.match(/carne.*(res|vaca)|res.*carne|bistec|filete|carne roja/)) {
-                return `**Informacion nutricional de la carne de res:**
-
-Por cada 100 gramos de carne magra cocida:
-
-**Macronutrientes:**
-- Proteina: 26 gramos
-- Calorias: 250 kcal
-- Grasa total: 15 gramos
-- Grasa saturada: 6 gramos
-- Colesterol: 90 mg
-
-**Por corte (100g cocido):**
-- Solomillo: 217 kcal, 27g proteina, 11g grasa
-- Lomo: 268 kcal, 24g proteina, 18g grasa
-- T-bone: 247 kcal, 24g proteina, 16g grasa
-- Carne molida 90/10: 217 kcal, 26g proteina
-
-**Vitaminas y minerales:**
-- Vitamina B12: 2.64 mcg (110% VD)
-- Zinc: 6.3 mg (57% VD)
-- Selenio: 33 mcg (60% VD)
-- Hierro hemo: 2.6 mg (14% VD)
-- Niacina: 7.6 mg (48% VD)
-- Fosforo: 198 mg (28% VD)
-
-El hierro hemo de la carne roja se absorbe 2-3 veces mejor que el hierro vegetal. Es especialmente importante para prevenir anemia.`;
-            }
-
-            if (msg.match(/salmon|pescado.*graso/)) {
-                return `**Informacion nutricional del salmon:**
-
-Por cada 100 gramos de salmon del Atlantico cocido:
-
-**Macronutrientes:**
-- Proteina: 25.4 gramos
-- Calorias: 208 kcal
-- Grasa total: 12.4 gramos
-- Omega-3 (EPA+DHA): 2.3 gramos
-- Colesterol: 55 mg
-- Carbohidratos: 0 gramos
-
-**Vitaminas:**
-- Vitamina D: 526 UI (66% VD)
-- Vitamina B12: 3.2 mcg (133% VD)
-- Niacina: 8.6 mg (54% VD)
-- Vitamina B6: 0.6 mg (35% VD)
-- Tiamina: 0.3 mg (25% VD)
-
-**Minerales:**
-- Selenio: 46 mcg (84% VD)
-- Fosforo: 252 mg (36% VD)
-- Potasio: 384 mg (8% VD)
-
-El salmon es una de las mejores fuentes de acidos grasos omega-3, esenciales para la salud cardiovascular, cerebral y reduccion de inflamacion.`;
-            }
-
-            if (msg.match(/huevo|huevos/)) {
-                return `**Informacion nutricional del huevo:**
-
-Por un huevo grande (50g):
-
-**Macronutrientes:**
-- Proteina: 6.3 gramos
-- Calorias: 72 kcal
-- Grasa total: 4.8 gramos
-- Grasa saturada: 1.6 gramos
-- Colesterol: 186 mg
-- Carbohidratos: 0.4 gramos
-
-**Clara vs Yema:**
-- Clara (33g): 17 kcal, 3.6g proteina, 0g grasa
-- Yema (17g): 55 kcal, 2.7g proteina, 4.5g grasa
-
-**Vitaminas:**
-- Vitamina D: 41 UI (10% VD)
-- Vitamina B12: 0.6 mcg (25% VD)
-- Riboflavina B2: 0.2 mg (15% VD)
-- Vitamina A: 270 UI (6% VD)
-- Colina: 147 mg (27% VD)
-
-**Minerales:**
-- Selenio: 15.4 mcg (28% VD)
-- Fosforo: 99 mg (14% VD)
-
-El huevo contiene los 9 aminoacidos esenciales y es considerado la proteina de referencia con valor biologico de 100.`;
-            }
-
-            if (msg.match(/atun|tuna/)) {
-                return `**Informacion nutricional del atun:**
-
-Por cada 100 gramos de atun en agua (escurrido):
-
-**Macronutrientes:**
-- Proteina: 29.9 gramos
-- Calorias: 128 kcal
-- Grasa total: 0.8 gramos
-- Omega-3: 0.2 gramos
-- Colesterol: 42 mg
-
-**Atun fresco cocido (100g):**
-- Proteina: 30 gramos
-- Calorias: 184 kcal
-- Grasa: 6 gramos
-
-**Vitaminas y minerales:**
-- Vitamina B12: 2.1 mcg (88% VD)
-- Vitamina D: 82 UI (21% VD)
-- Niacina: 10.1 mg (63% VD)
-- Selenio: 80 mcg (145% VD)
-- Fosforo: 326 mg (47% VD)
-
-El atun es una de las fuentes de proteina mas magras disponibles. Se recomienda limitar consumo a 2-3 porciones semanales debido al contenido de mercurio.`;
-            }
-
-            // ==================== NUTRICION - FRUTAS ====================
-
-            if (msg.match(/manzana/)) {
-                return `**Informacion nutricional de la manzana:**
-
-Por cada 100 gramos de manzana cruda con piel:
-
-**Macronutrientes:**
-- Calorias: 52 kcal
-- Carbohidratos: 13.8 gramos
-- Azucares: 10.4 gramos
-- Fibra: 2.4 gramos
-- Proteina: 0.3 gramos
-- Grasa: 0.2 gramos
-
-**Por manzana mediana (182g):**
-- Calorias: 95 kcal
-- Fibra: 4.4 gramos
-
-**Vitaminas:**
-- Vitamina C: 4.6 mg (8% VD)
-- Vitamina K: 2.2 mcg (2% VD)
-- Vitamina A: 54 UI
-- Vitamina B6: 0.041 mg
-
-**Minerales:**
-- Potasio: 107 mg (3% VD)
-- Calcio: 6 mg
-- Magnesio: 5 mg
-
-**Compuestos bioactivos:**
-- Quercetina: antioxidante antiinflamatorio
-- Catequina: protector cardiovascular
-- Pectina: fibra soluble para salud digestiva
-
-Comer la manzana con cascara proporciona mas fibra y antioxidantes.`;
-            }
-
-            if (msg.match(/platano|banana|banano/)) {
-                return `**Informacion nutricional del platano:**
-
-Por un platano mediano (118g):
-
-**Macronutrientes:**
-- Calorias: 105 kcal
-- Carbohidratos: 27 gramos
-- Azucares: 14 gramos
-- Fibra: 3.1 gramos
-- Proteina: 1.3 gramos
-- Grasa: 0.4 gramos
-
-**Vitaminas:**
-- Vitamina B6: 0.43 mg (25% VD)
-- Vitamina C: 10.3 mg (11% VD)
-- Riboflavina: 0.1 mg
-- Folato: 24 mcg
-
-**Minerales:**
-- Potasio: 422 mg (9% VD)
-- Magnesio: 32 mg (8% VD)
-- Manganeso: 0.3 mg (14% VD)
-
-**Indice glucemico:** 51 (medio)
-
-El platano es ideal para deportistas por su potasio (previene calambres) y carbohidratos de rapida absorcion para energia inmediata.`;
-            }
-
-            if (msg.match(/naranja/)) {
-                return `**Informacion nutricional de la naranja:**
-
-Por una naranja mediana (131g):
-
-**Macronutrientes:**
-- Calorias: 62 kcal
-- Carbohidratos: 15.4 gramos
-- Azucares: 12.2 gramos
-- Fibra: 3.1 gramos
-- Proteina: 1.2 gramos
-- Grasa: 0.2 gramos
-
-**Vitaminas:**
-- Vitamina C: 70 mg (78% VD)
-- Folato: 40 mcg (10% VD)
-- Tiamina B1: 0.1 mg (8% VD)
-- Vitamina A: 295 UI
-
-**Minerales:**
-- Potasio: 237 mg (5% VD)
-- Calcio: 52 mg (4% VD)
-
-**Compuestos bioactivos:**
-- Hesperidina: flavonoide para salud vascular
-- Beta-criptoxantina: carotenoide antioxidante
-
-La naranja es una de las mejores fuentes de vitamina C, esencial para el sistema inmunologico y absorcion de hierro.`;
-            }
-
-            // ==================== NUTRICION - OTROS ALIMENTOS ====================
-
-            if (msg.match(/arroz/)) {
-                return `**Informacion nutricional del arroz:**
-
-**Arroz blanco cocido (por 100g):**
-- Calorias: 130 kcal
-- Carbohidratos: 28.2 gramos
-- Proteina: 2.7 gramos
-- Grasa: 0.3 gramos
-- Fibra: 0.4 gramos
-
-**Arroz integral cocido (por 100g):**
-- Calorias: 123 kcal
-- Carbohidratos: 25.6 gramos
-- Proteina: 2.7 gramos
-- Grasa: 1.0 gramos
-- Fibra: 1.8 gramos
-
-**Por taza cocida (158g):**
-- Arroz blanco: 205 kcal
-- Arroz integral: 195 kcal
-
-**Indice glucemico:**
-- Arroz blanco: 73 (alto)
-- Arroz integral: 68 (medio)
-- Arroz basmati: 58 (medio)
-
-**Minerales (integral):**
-- Magnesio: 39 mg (10% VD)
-- Fosforo: 103 mg (15% VD)
-- Manganeso: 0.9 mg (39% VD)
-
-El arroz integral conserva el salvado y germen, aportando mas fibra y nutrientes que el blanco.`;
-            }
-
-            if (msg.match(/leche/)) {
-                return `**Informacion nutricional de la leche:**
-
-**Leche entera (por 240ml/1 taza):**
-- Calorias: 149 kcal
-- Proteina: 8 gramos
-- Grasa: 8 gramos
-- Carbohidratos: 12 gramos
-- Azucar (lactosa): 12 gramos
-
-**Comparativa por tipo (240ml):**
-- Entera: 149 kcal, 8g grasa
-- Semidescremada 2%: 122 kcal, 5g grasa
-- Descremada: 83 kcal, 0.2g grasa
-
-**Vitaminas y minerales:**
-- Calcio: 276 mg (21% VD)
-- Vitamina D: 115 UI (29% VD)
-- Vitamina B12: 1.1 mcg (46% VD)
-- Riboflavina: 0.4 mg (31% VD)
-- Fosforo: 205 mg (16% VD)
-- Potasio: 322 mg (7% VD)
-
-La leche es una fuente completa de proteina de alta calidad (caseina y suero), excelente para desarrollo muscular y salud osea.`;
-            }
-
-            if (msg.match(/avena/)) {
-                return `**Informacion nutricional de la avena:**
-
-Por cada 100 gramos de avena cruda:
-
-**Macronutrientes:**
-- Calorias: 389 kcal
-- Carbohidratos: 66.3 gramos
-- Fibra: 10.6 gramos
-- Proteina: 16.9 gramos
-- Grasa: 6.9 gramos
-
-**Por porcion cocida (1 taza, 234g):**
-- Calorias: 166 kcal
-- Proteina: 6 gramos
-- Fibra: 4 gramos
-- Carbohidratos: 28 gramos
-
-**Vitaminas y minerales:**
-- Manganeso: 4.9 mg (191% VD)
-- Fosforo: 523 mg (75% VD)
-- Magnesio: 177 mg (44% VD)
-- Hierro: 4.7 mg (26% VD)
-- Zinc: 4 mg (36% VD)
-- Tiamina: 0.8 mg (66% VD)
-
-**Beta-glucano:** 4g por 100g
-Este tipo de fibra soluble reduce el colesterol LDL y mejora el control glucemico.
-
-Indice glucemico: 55 (bajo-medio)`;
-            }
-
-            // ==================== CIENCIA ====================
-
-            if (msg.match(/relatividad|einstein/)) {
-                return `**Teoria de la Relatividad de Einstein:**
-
-**Relatividad Especial (1905):**
-
-Postulados fundamentales:
-1. Las leyes de la fisica son iguales para todos los observadores en movimiento uniforme
-2. La velocidad de la luz es constante (299,792,458 m/s) para todos los observadores
-
-**Consecuencias:**
-- Dilatacion del tiempo: El tiempo pasa mas lento para objetos en movimiento
-- Contraccion de la longitud: Los objetos se acortan en direccion del movimiento
-- Equivalencia masa-energia: E = mc2
-
-**Relatividad General (1915):**
-
-Principio central: La gravedad no es una fuerza, sino una curvatura del espacio-tiempo causada por masa y energia.
-
-**Predicciones confirmadas:**
-- Deflexion de la luz por gravedad (1919)
-- Ondas gravitacionales (detectadas 2015)
-- Agujeros negros
-- Dilatacion gravitacional del tiempo
-
-**Aplicacion practica:**
-Los satelites GPS deben corregir sus relojes 38 microsegundos diarios porque el tiempo pasa mas rapido en orbita (menos gravedad) y mas lento por su velocidad.`;
-            }
-
-            if (msg.match(/fotosintesis/)) {
-                return `**Fotosintesis:**
-
-Proceso mediante el cual plantas, algas y ciertas bacterias convierten energia luminosa en energia quimica.
-
-**Ecuacion general:**
-6CO2 + 6H2O + luz = C6H12O6 + 6O2
-
-Dioxido de carbono + Agua + Luz = Glucosa + Oxigeno
-
-**Fases del proceso:**
-
-**1. Fase luminosa (tilacoides):**
-- Captacion de luz por clorofila
-- Fotolisis del agua (ruptura de H2O)
-- Produccion de ATP y NADPH
-- Liberacion de O2 como subproducto
-
-**2. Ciclo de Calvin (estroma):**
-- Fijacion de CO2 por enzima RuBisCO
-- Reduccion usando ATP y NADPH
-- Regeneracion del aceptor
-- Sintesis de glucosa
-
-**Pigmentos:**
-- Clorofila a: absorbe luz roja (680nm) y azul (430nm)
-- Clorofila b: absorbe luz naranja y azul
-- Carotenoides: absorben luz azul-verde
-
-**Eficiencia:** Las plantas convierten 1-2% de la energia solar en energia quimica.`;
-            }
-
-            if (msg.match(/sistema solar|planetas/)) {
-                return `**El Sistema Solar:**
-
-**Los 8 planetas ordenados por distancia al Sol:**
-
-**1. Mercurio**
-- Distancia: 58 millones km
-- Diametro: 4,879 km
-- Temperatura: -180C a 430C
-
-**2. Venus**
-- Distancia: 108 millones km
-- Diametro: 12,104 km
-- Temperatura: 465C (mas caliente)
-
-**3. Tierra**
-- Distancia: 150 millones km (1 UA)
-- Diametro: 12,742 km
-- Unica con agua liquida
-
-**4. Marte**
-- Distancia: 228 millones km
-- Diametro: 6,779 km
-- Monte Olimpo: 22 km altura
-
-**5. Jupiter**
-- Distancia: 778 millones km
-- Diametro: 139,820 km
-- 79 lunas conocidas
-
-**6. Saturno**
-- Distancia: 1,427 millones km
-- Diametro: 116,460 km
-- Anillos de hielo y roca
-
-**7. Urano**
-- Distancia: 2,871 millones km
-- Inclinacion axial: 98 grados
-
-**8. Neptuno**
-- Distancia: 4,498 millones km
-- Vientos: hasta 2,100 km/h`;
-            }
-
-            if (msg.match(/celula|celulas/)) {
-                return `**La Celula:**
-
-Unidad basica estructural y funcional de todos los seres vivos.
-
-**Tipos principales:**
-
-**Celula Procariota (bacterias):**
-- Sin nucleo definido
-- ADN circular en citoplasma
-- Tamano: 0.1-5 micrometros
-- Sin organelos membranosos
-
-**Celula Eucariota (animales, plantas, hongos):**
-- Nucleo definido con membrana
-- ADN lineal en cromosomas
-- Tamano: 10-100 micrometros
-- Organelos especializados
-
-**Organelos principales:**
-
-- Nucleo: Contiene ADN, controla la celula
-- Mitocondria: Produce energia (ATP)
-- Ribosomas: Sintesis de proteinas
-- Reticulo endoplasmatico: Transporte de proteinas
-- Aparato de Golgi: Empaqueta y envia proteinas
-- Lisosomas: Digestion celular
-- Membrana plasmatica: Barrera selectiva
-
-**Solo en celulas vegetales:**
-- Pared celular (celulosa)
-- Cloroplastos (fotosintesis)
-- Vacuola central grande
-
-El cuerpo humano contiene aproximadamente 37 billones de celulas.`;
-            }
-
-            if (msg.match(/adn|dna|genetica/)) {
-                return `**ADN (Acido Desoxirribonucleico):**
-
-Molecula que contiene las instrucciones geneticas de todos los seres vivos.
-
-**Estructura:**
-- Doble helice (Watson y Crick, 1953)
-- Dos cadenas de nucleotidos enrolladas
-- Cada nucleotido: azucar + fosfato + base nitrogenada
-
-**Las 4 bases nitrogenadas:**
-- Adenina (A) se une con Timina (T)
-- Guanina (G) se une con Citosina (C)
-
-**Genoma humano:**
-- 3,000 millones de pares de bases
-- 20,000-25,000 genes codificantes
-- 23 pares de cromosomas
-- 99.9% identico entre humanos
-- 98.8% similar al chimpance
-
-**Procesos principales:**
-- Replicacion: Copia del ADN (division celular)
-- Transcripcion: ADN a ARN mensajero
-- Traduccion: ARN a proteinas
-
-**Aplicaciones:**
-- Pruebas de paternidad
-- Identificacion forense
-- Diagnostico genetico
-- Terapia genica
-- CRISPR (edicion genetica)`;
-            }
-
-            // ==================== HISTORIA ====================
-
-            if (msg.match(/segunda guerra mundial|ww2|wwii|guerra mundial/)) {
-                return `**Segunda Guerra Mundial (1939-1945):**
-
-**Fechas clave:**
-- Inicio: 1 de septiembre de 1939 (invasion de Polonia)
-- Fin en Europa: 8 de mayo de 1945 (Dia V-E)
-- Fin total: 2 de septiembre de 1945 (rendicion de Japon)
-
-**Bandos:**
-Aliados: Reino Unido, Francia, URSS (1941), EE.UU. (1941), China
-Eje: Alemania Nazi, Italia Fascista, Japon Imperial
-
-**Causas:**
-- Tratado de Versalles y humillacion alemana
-- Ascenso del fascismo y nazismo
-- Expansion territorial agresiva
-- Fracaso de la politica de apaciguamiento
-
-**Eventos principales:**
-- 1939: Invasion de Polonia
-- 1940: Caida de Francia, Batalla de Inglaterra
-- 1941: Operacion Barbarroja, Pearl Harbor
-- 1942: Stalingrado, Midway, El Alamein
-- 1944: Dia D (6 de junio), liberacion de Paris
-- 1945: Caida de Berlin, Hiroshima y Nagasaki
-
-**Cifras:**
-- Muertos totales: 70-85 millones
-- Militares: 21-25 millones
-- Civiles: 50-55 millones
-- Holocausto: 6 millones de judios
-
-**Consecuencias:**
-- Creacion de la ONU
-- Inicio de la Guerra Fria
-- Descolonizacion
-- Creacion del Estado de Israel`;
-            }
-
-            if (msg.match(/revolucion.*(francesa|frances)/)) {
-                return `**Revolucion Francesa (1789-1799):**
-
-**Causas:**
-- Crisis financiera del estado
-- Sistema de tres estamentos desigual
-- Ideas de la Ilustracion
-- Hambruna por malas cosechas
-- Ejemplo de Revolucion Americana
-
-**Eventos principales:**
-
-- 5 mayo 1789: Convocatoria Estados Generales
-- 17 junio 1789: Tercer Estado forma Asamblea Nacional
-- 14 julio 1789: Toma de la Bastilla
-- 26 agosto 1789: Declaracion de Derechos del Hombre
-- Octubre 1789: Marcha sobre Versalles
-- 1791: Primera constitucion
-- 21 enero 1793: Ejecucion de Luis XVI
-- 1793-1794: El Terror (Robespierre)
-- 27 julio 1794: Caida de Robespierre
-- 1799: Golpe de Napole on
-
-**Lema:** Liberte, Egalite, Fraternite
-
-**Consecuencias:**
-- Fin de la monarquia absoluta
-- Abolicion del feudalismo
-- Declaracion de derechos civiles
-- Separacion Iglesia-Estado
-- Codigo civil moderno
-- Influencia mundial en movimientos democraticos`;
-            }
-
-            // ==================== MATEMATICAS ====================
-
-            if (msg.match(/pitagoras/)) {
-                return `**Teorema de Pitagoras:**
-
-**Formula:**
-a2 + b2 = c2
-
-Donde:
-- a y b son los catetos (lados del angulo recto)
-- c es la hipotenusa (lado mas largo)
-
-**Demostracion por ejemplo:**
-Si a = 3 y b = 4:
-32 + 42 = c2
-9 + 16 = c2
-25 = c2
-c = 5
-
-**Ternas pitagoricas comunes:**
-- 3, 4, 5
-- 5, 12, 13
-- 8, 15, 17
-- 7, 24, 25
-- 9, 40, 41
-- 11, 60, 61
-
-**Aplicaciones:**
-- Construccion y arquitectura
-- Navegacion y cartografia
-- Calculo de distancias
-- Diseno grafico
-- Videojuegos (colisiones)
-
-**Historia:**
-Aunque lleva el nombre del matematico griego Pitagoras (570-495 a.C.), el teorema era conocido por babilonios y egipcios mil anos antes. La tablilla Plimpton 322 (1800 a.C.) contiene ternas pitagoricas.
-
-**Reciproco:**
-Si a2 + b2 = c2, entonces el triangulo es rectangulo.`;
-            }
-
-            if (msg.match(/derivada|calculo diferencial/)) {
-                return `**Derivadas en Calculo:**
-
-La derivada mide la tasa de cambio instantanea de una funcion.
-
-**Notacion:**
-f'(x), dy/dx, df/dx, Df(x)
-
-**Definicion formal:**
-f'(x) = lim[h->0] (f(x+h) - f(x)) / h
-
-**Reglas basicas:**
-
-1. Constante: d/dx[c] = 0
-2. Potencia: d/dx[xn] = n*x(n-1)
-3. Suma: d/dx[f+g] = f' + g'
-4. Producto: d/dx[fg] = f'g + fg'
-5. Cociente: d/dx[f/g] = (f'g - fg') / g2
-6. Cadena: d/dx[f(g(x))] = f'(g(x)) * g'(x)
-
-**Derivadas comunes:**
-- d/dx[sin(x)] = cos(x)
-- d/dx[cos(x)] = -sin(x)
-- d/dx[ex] = ex
-- d/dx[ln(x)] = 1/x
-- d/dx[tan(x)] = sec2(x)
-
-**Aplicaciones:**
-- Velocidad y aceleracion
-- Optimizacion (maximos y minimos)
-- Analisis de graficas
-- Tasas de cambio en fisica e ingenieria`;
-            }
-
-            // ==================== GEOGRAFIA ====================
-
-            if (msg.match(/pais.*grande|paises.*grandes/)) {
-                return `**Paises mas grandes del mundo por superficie:**
-
-1. Rusia: 17,098,242 km2
-   - 11% de la tierra emergida
-   - 11 zonas horarias
-
-2. Canada: 9,984,670 km2
-   - Costa mas larga del mundo
-
-3. Estados Unidos: 9,833,517 km2
-   - Incluye Alaska y Hawaii
-
-4. China: 9,596,960 km2
-   - Pais mas poblado
-
-5. Brasil: 8,515,770 km2
-   - Mayor de America Latina
-
-6. Australia: 7,741,220 km2
-   - Unico pais-continente
-
-7. India: 3,287,263 km2
-   - Segunda mayor poblacion
-
-8. Argentina: 2,780,400 km2
-   - Mayor hispanohablante
-
-9. Kazajistan: 2,724,900 km2
-   - Mayor sin costa maritima
-
-10. Argelia: 2,381,741 km2
-    - Mayor de Africa
-
-**Datos adicionales:**
-- Mexico: puesto 13 con 1,964,375 km2
-- Espana: puesto 52 con 505,990 km2
-- Vaticano: mas pequeno con 0.44 km2`;
-            }
-
-            // ==================== TECNOLOGIA ====================
-
-            if (msg.match(/inteligencia artificial|que es ia/)) {
-                return `**Inteligencia Artificial (IA):**
-
-Sistema computacional capaz de realizar tareas que requieren inteligencia humana.
-
-**Tipos por capacidad:**
-- IA Estrecha (ANI): Tareas especificas (estado actual)
-- IA General (AGI): Capacidad humana (teorica)
-- Superinteligencia (ASI): Superior a humanos (hipotetica)
-
-**Metodologias principales:**
-- Machine Learning: Aprende de datos
-- Deep Learning: Redes neuronales multicapa
-- Reinforcement Learning: Aprende por recompensas
-- NLP: Procesamiento de lenguaje natural
-
-**Aplicaciones actuales:**
-- Asistentes virtuales
-- Reconocimiento facial
-- Diagnostico medico
-- Vehiculos autonomos
-- Generacion de contenido
-- Traduccion automatica
-- Sistemas de recomendacion
-- Deteccion de fraude
-
-**Historia clave:**
-- 1956: Termino acunado por John McCarthy
-- 1997: Deep Blue vence a Kasparov
-- 2011: Watson gana Jeopardy
-- 2016: AlphaGo derrota a Lee Sedol
-- 2022: ChatGPT marca nueva era de IA generativa
-
-**Preocupaciones:**
-- Perdida de empleos
-- Sesgo algoritmico
-- Privacidad
-- Seguridad`;
-            }
-
-            // ==================== RESPUESTAS BASICAS ====================
-
-            if (msg.match(/hola|buenas|saludos/)) {
-                return 'Hola. Soy Pisi, tu asistente personal. Puedo responder preguntas sobre nutricion, ciencia, historia, matematicas, tecnologia y mas. Que necesitas saber?';
-            }
-
-            if (msg.match(/como te llamas|tu nombre|quien eres/)) {
-                return 'Soy Pisi, tu asistente personal de inteligencia artificial. Estoy disenado para responder preguntas de forma precisa y profesional sobre cualquier tema.';
-            }
-
-            if (msg.match(/que puedes|para que sirves/)) {
-                return `Soy un asistente experto que puede ayudarte con:
-
-- Nutricion: valores nutricionales, macros, vitaminas de cualquier alimento
-- Ciencia: fisica, quimica, biologia, astronomia
-- Historia: eventos historicos, fechas, contexto
-- Matematicas: formulas, teoremas, calculos
-- Tecnologia: conceptos tecnicos, programacion
-- Geografia: paises, capitales, datos demograficos
-- Salud: informacion medica general
-
-Pregunta lo que necesites y te dare una respuesta completa y precisa.`;
-            }
-
-            if (msg.match(/gracias/)) {
-                return 'De nada. Si tienes mas preguntas, aqui estoy para ayudarte.';
-            }
-
-            if (msg.match(/adios|hasta luego|bye|chao/)) {
-                return 'Hasta pronto. Cuando necesites informacion, aqui estare.';
-            }
-
-            // Hora y fecha
-            if (msg.match(/que hora|hora actual/)) {
-                return `Hora actual: ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
-            }
-
-            if (msg.match(/que dia|fecha actual|que fecha/)) {
-                return `Fecha actual: ${new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-            }
-
-            // Calculos matematicos
-            if (msg.match(/cuanto es|calcula|\d+\s*[\+\-\*\/x]\s*\d+/)) {
-                try {
-                    let expr = msg.match(/[\d\+\-\*\/x\.\s\(\)]+/g);
-                    if (expr) {
-                        let mathExpr = expr.join('').replace(/x/g, '*').replace(/\s/g, '');
-                        if (mathExpr.match(/^[\d\+\-\*\/\.\(\)]+$/)) {
-                            const result = Function('"use strict"; return (' + mathExpr + ')')();
-                            return `Resultado: ${mathExpr.replace(/\*/g, ' x ')} = ${result}`;
+        async function searchNutrition(query) {
+            try {
+                updateTypingText('Buscando datos nutricionales...');
+                
+                // Extraer el alimento de la consulta
+                const foodTerms = query.toLowerCase()
+                    .replace(/proteina|calorias|nutricion|nutrientes|vitaminas|cuanta|cuanto|tiene|el|la|del|de|en/g, '')
+                    .trim();
+                
+                if (!foodTerms) return { found: false };
+                
+                // Usar USDA FoodData Central API (gratis)
+                const url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(foodTerms)}&pageSize=1&api_key=DEMO_KEY`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.foods && data.foods.length > 0) {
+                    const food = data.foods[0];
+                    let content = `**Informacion nutricional: ${food.description}**\n\n`;
+                    content += `Por cada 100 gramos:\n\n`;
+                    
+                    const nutrients = food.foodNutrients || [];
+                    const important = [
+                        'Energy', 'Protein', 'Total lipid (fat)', 'Carbohydrate', 
+                        'Fiber', 'Sugars', 'Calcium', 'Iron', 'Sodium',
+                        'Vitamin C', 'Vitamin A', 'Vitamin D', 'Vitamin B-12',
+                        'Cholesterol', 'Potassium', 'Magnesium'
+                    ];
+                    
+                    const translations = {
+                        'Energy': 'Energia',
+                        'Protein': 'Proteina',
+                        'Total lipid (fat)': 'Grasa total',
+                        'Carbohydrate, by difference': 'Carbohidratos',
+                        'Fiber, total dietary': 'Fibra',
+                        'Sugars, total including NLEA': 'Azucares',
+                        'Calcium, Ca': 'Calcio',
+                        'Iron, Fe': 'Hierro',
+                        'Sodium, Na': 'Sodio',
+                        'Vitamin C, total ascorbic acid': 'Vitamina C',
+                        'Vitamin A, RAE': 'Vitamina A',
+                        'Vitamin D (D2 + D3)': 'Vitamina D',
+                        'Vitamin B-12': 'Vitamina B12',
+                        'Cholesterol': 'Colesterol',
+                        'Potassium, K': 'Potasio',
+                        'Magnesium, Mg': 'Magnesio'
+                    };
+                    
+                    for (const nutrient of nutrients) {
+                        const name = nutrient.nutrientName;
+                        for (const imp of important) {
+                            if (name && name.includes(imp)) {
+                                const translatedName = translations[name] || name;
+                                content += `- ${translatedName}: ${nutrient.value} ${nutrient.unitName}\n`;
+                                break;
+                            }
                         }
                     }
-                } catch (e) {}
+                    
+                    return {
+                        found: true,
+                        content: content,
+                        sources: [
+                            { name: 'USDA FoodData Central (Departamento de Agricultura de EE.UU.)', url: 'https://fdc.nal.usda.gov/' }
+                        ]
+                    };
+                }
+                
+                return { found: false };
+                
+            } catch (error) {
+                console.log('Nutrition API error:', error);
+                return { found: false };
             }
-
-            return null;
-        }
-
-        function getExtendedAnswer(message) {
-            return `No tengo informacion especifica sobre esa consulta en mi base de conocimientos actual.
-
-Puedo ayudarte con:
-- Nutricion (valores de alimentos, macros, vitaminas)
-- Ciencia (fisica, quimica, biologia, astronomia)
-- Historia (eventos, guerras, revoluciones)
-- Matematicas (formulas, teoremas)
-- Tecnologia (IA, programacion, conceptos)
-- Geografia (paises, datos)
-
-Reformula tu pregunta o consulta sobre estos temas.`;
         }
 
         function clearChat() {
@@ -1221,19 +607,15 @@ Reformula tu pregunta o consulta sobre estos temas.`;
                 <div class="welcome" id="welcome">
                     <div class="icon">P</div>
                     <h2>Hola, soy Pisi</h2>
-                    <p>Tu asistente personal. Puedo responder cualquier pregunta.</p>
+                    <p>Busco informacion en internet y te muestro las fuentes oficiales.</p>
                     <div class="suggestions">
                         <div class="suggestion" onclick="askSuggestion('Proteina en pechuga de pollo')">Nutricion</div>
-                        <div class="suggestion" onclick="askSuggestion('Teoria de la relatividad')">Ciencia</div>
+                        <div class="suggestion" onclick="askSuggestion('Albert Einstein')">Biografias</div>
                         <div class="suggestion" onclick="askSuggestion('Segunda Guerra Mundial')">Historia</div>
+                        <div class="suggestion" onclick="askSuggestion('Sistema solar')">Ciencia</div>
                     </div>
                 </div>
             `;
-            conversationHistory = [];
-        }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => {});
         }
     </script>
 </body>
