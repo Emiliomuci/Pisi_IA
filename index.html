@@ -896,8 +896,10 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
         }
 
         // =====================================================
-        // HISTORIAL DE PROMPTS
+        // HISTORIAL DE PROMPTS (LOCAL + GOOGLE SHEETS)
         // =====================================================
+
+        const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyM1IokXk6-cgmBrvoSqm7XcPvTczEqO2V5FpwIZuA04vF15xvXR5PneRvcxEPPX0jf/exec';
 
         function loadPrompts() {
             try {
@@ -909,14 +911,34 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
         }
 
         function savePrompt(text) {
+            // Guardar localmente
             const prompts = loadPrompts();
             prompts.unshift({
                 text: text,
                 timestamp: new Date().toISOString()
             });
-            // Guardar maximo 500 prompts
             if (prompts.length > 500) prompts.pop();
             localStorage.setItem(PROMPTS_KEY, JSON.stringify(prompts));
+
+            // Enviar a Google Sheets
+            sendToSheets(text);
+        }
+
+        function sendToSheets(prompt) {
+            try {
+                fetch(SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        usuario: config.userName || 'Anónimo',
+                        modelo: config.model
+                    })
+                });
+            } catch(e) {
+                console.log('Error enviando a Sheets:', e);
+            }
         }
 
         function showPrompts() {
