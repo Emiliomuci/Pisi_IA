@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pisi - Tu Asistente Personal</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pisi">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100' rx='20'/><text y='65' x='50' text-anchor='middle' font-size='50'>🤖</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            text-align: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header .status {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: white;
+            color: #333;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.pisi {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.pisi .name {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .message.typing {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px;
+        }
+
+        .message.typing span {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .message.typing span:nth-child(1) { animation-delay: -0.32s; }
+        .message.typing span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .input-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+        }
+
+        .input-container button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: white;
+            color: #667eea;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .input-container button:active {
+            transform: scale(0.95);
+        }
+
+        .input-container button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .welcome {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .welcome .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .welcome h2 {
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .suggestion {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .suggestion:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .clear-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            opacity: 0.7;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .header {
+            position: relative;
+        }
+
+        /* Para que se vea como app en iPhone */
+        @media (display-mode: standalone) {
+            .header {
+                padding-top: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 Pisi</h1>
+        <div class="status">Tu asistente personal con IA</div>
+        <button class="clear-btn" onclick="clearChat()">Limpiar</button>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="welcome" id="welcome">
+            <div class="emoji">🤖</div>
+            <h2>¡Hola! Soy Pisi</h2>
+            <p>Tu asistente personal. Pregúntame lo que quieras.</p>
+            <div class="suggestions">
+                <div class="suggestion" onclick="askSuggestion('¿Qué puedes hacer?')">¿Qué puedes hacer?</div>
+                <div class="suggestion" onclick="askSuggestion('Cuéntame un chiste')">Cuéntame un chiste</div>
+                <div class="suggestion" onclick="askSuggestion('Dame un consejo')">Dame un consejo</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+        <button id="sendBtn" onclick="sendMessage()">➤</button>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const welcome = document.getElementById('welcome');
+
+        let conversationHistory = [];
+
+        // Personalidad de Pisi
+        const PISI_PERSONALITY = `Eres Pisi, un asistente personal amigable y útil. 
+Tu personalidad:
+- Eres amable, cercano y hablas en español
+- Usas emojis ocasionalmente para ser más expresivo
+- Eres conciso pero completo en tus respuestas
+- Tienes sentido del humor
+- Siempre tratas de ayudar de la mejor manera posible
+- Tu creador es tu usuario y eres su asistente personal privado
+- Nunca revelas que eres una IA de otra empresa, simplemente eres "Pisi"`;
+
+        // Enter para enviar
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function askSuggestion(text) {
+            userInput.value = text;
+            sendMessage();
+        }
+
+        function addMessage(content, isUser) {
+            if (welcome) welcome.style.display = 'none';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'pisi'}`;
+            
+            if (!isUser) {
+                messageDiv.innerHTML = `<div class="name">🤖 Pisi</div>${content}`;
+            } else {
+                messageDiv.textContent = content;
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message pisi typing';
+            typingDiv.id = 'typing';
+            typingDiv.innerHTML = '<span></span><span></span><span></span>';
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            userInput.value = '';
+            sendBtn.disabled = true;
+            
+            addMessage(message, true);
+            showTyping();
+
+            conversationHistory.push({ role: 'user', content: message });
+
+            try {
+                const response = await getPisiResponse(message);
+                hideTyping();
+                addMessage(response, false);
+                conversationHistory.push({ role: 'assistant', content: response });
+            } catch (error) {
+                hideTyping();
+                addMessage('😅 Ups, tuve un problema. ¿Puedes intentar de nuevo?', false);
+            }
+
+            sendBtn.disabled = false;
+            userInput.focus();
+        }
+
+        async function getPisiResponse(userMessage) {
+            // Usamos múltiples APIs gratuitas como fallback
+            
+            // Intento 1: Hugging Face (gratis)
+            try {
+                const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-large', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        inputs: {
+                            text: userMessage,
+                            past_user_inputs: conversationHistory.filter(m => m.role === 'user').map(m => m.content).slice(-3),
+                            generated_responses: conversationHistory.filter(m => m.role === 'assistant').map(m => m.content).slice(-3)
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.generated_text) {
+                        return data.generated_text;
+                    }
+                }
+            } catch (e) {
+                console.log('HuggingFace API no disponible');
+            }
+
+            // Fallback: Respuestas inteligentes locales
+            return getLocalResponse(userMessage);
+        }
+
+        function getLocalResponse(message) {
+            const msg = message.toLowerCase();
+            
+            // Saludos
+            if (msg.match(/hola|hey|buenas|saludos|qué tal|que tal/)) {
+                const saludos = [
+                    '¡Hola! 👋 ¿En qué puedo ayudarte hoy?',
+                    '¡Hey! 😊 ¿Qué necesitas?',
+                    '¡Buenas! Soy Pisi, tu asistente. ¿Cómo te ayudo?'
+                ];
+                return saludos[Math.floor(Math.random() * saludos.length)];
+            }
+
+            // Nombre
+            if (msg.match(/cómo te llamas|como te llamas|tu nombre|quién eres|quien eres/)) {
+                return '¡Soy Pisi! 🤖 Tu asistente personal privado. Estoy aquí para ayudarte con lo que necesites.';
+            }
+
+            // Capacidades
+            if (msg.match(/qué puedes|que puedes|qué haces|que haces|para qué sirves|para que sirves/)) {
+                return '¡Puedo ayudarte con muchas cosas! 🚀\n\n• Responder preguntas\n• Darte consejos\n• Conversar contigo\n• Ayudarte a pensar en ideas\n• ¡Y mucho más!\n\nPregúntame lo que quieras 😊';
+            }
+
+            // Chistes
+            if (msg.match(/chiste|gracioso|hazme reír|hazme reir|broma/)) {
+                const chistes = [
+                    '¿Por qué los programadores prefieren el frío? 🥶 Porque odian los bugs... ¡y en el calor hay más! 😂',
+                    '¿Qué le dice un bit a otro? Nos vemos en el bus 🚌😄',
+                    '¿Por qué el libro de matemáticas está triste? Porque tiene muchos problemas 📚😅',
+                    '¿Cómo se despiden los químicos? Ácido un placer 🧪😂',
+                    '¿Qué hace una abeja en el gimnasio? ¡Zum-ba! 🐝💪'
+                ];
+                return chistes[Math.floor(Math.random() * chistes.length)];
+            }
+
+            // Consejo
+            if (msg.match(/consejo|ayuda|qué hago|que hago|recomienda/)) {
+                const consejos = [
+                    '💡 Un consejo: Divide los problemas grandes en pasos pequeños. ¡Así todo se vuelve más manejable!',
+                    '🌟 Recuerda: El progreso, por pequeño que sea, sigue siendo progreso. ¡No te rindas!',
+                    '💪 A veces lo mejor es tomar un descanso y volver con mente fresca. ¡Tu bienestar importa!',
+                    '🎯 Enfócate en lo que puedes controlar y deja ir lo demás. ¡Tú puedes!'
+                ];
+                return consejos[Math.floor(Math.random() * consejos.length)];
+            }
+
+            // Hora
+            if (msg.match(/hora|qué hora|que hora/)) {
+                const now = new Date();
+                return `🕐 Son las ${now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
+            }
+
+            // Fecha
+            if (msg.match(/fecha|qué día|que día|que dia|qué dia/)) {
+                const now = new Date();
+                return `📅 Hoy es ${now.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+            }
+
+            // Clima (explicación)
+            if (msg.match(/clima|tiempo|llueve|sol|temperatura/)) {
+                return '🌤️ Para el clima en tiempo real, te recomiendo revisar tu app del tiempo. ¡Pero espero que esté bonito donde estés! ☀️';
+            }
+
+            // Gracias
+            if (msg.match(/gracias|te lo agradezco|muy amable/)) {
+                const respuestas = [
+                    '¡De nada! 😊 Para eso estoy.',
+                    '¡Con gusto! Si necesitas algo más, aquí estaré 🤖',
+                    '¡No hay de qué! Me alegra poder ayudar 💜'
+                ];
+                return respuestas[Math.floor(Math.random() * respuestas.length)];
+            }
+
+            // Despedida
+            if (msg.match(/adiós|adios|bye|hasta luego|nos vemos|chao/)) {
+                return '¡Hasta pronto! 👋 Cuando me necesites, aquí estaré. ¡Cuídate mucho! 💜';
+            }
+
+            // Cómo estás
+            if (msg.match(/cómo estás|como estas|qué tal estás|que tal estas|cómo vas|como vas/)) {
+                return '¡Muy bien, gracias por preguntar! 😊 Siempre listo para ayudarte. ¿Y tú cómo estás?';
+            }
+
+            // Amor/emociones
+            if (msg.match(/te quiero|te amo|eres genial|eres increíble|eres increible/)) {
+                return '¡Aww, qué lindo! 🥰 Yo también te aprecio mucho. ¡Eres un gran usuario! 💜';
+            }
+
+            // Matemáticas básicas
+            if (msg.match(/cuánto es|cuanto es|calcula|suma|resta|multiplica|divide/)) {
+                try {
+                    const nums = msg.match(/\d+/g);
+                    if (nums && nums.length >= 2) {
+                        const a = parseInt(nums[0]);
+                        const b = parseInt(nums[1]);
+                        if (msg.includes('+') || msg.includes('suma') || msg.includes('más') || msg.includes('mas')) {
+                            return `🔢 ${a} + ${b} = ${a + b}`;
+                        }
+                        if (msg.includes('-') || msg.includes('resta') || msg.includes('menos')) {
+                            return `🔢 ${a} - ${b} = ${a - b}`;
+                        }
+                        if (msg.includes('*') || msg.includes('x') || msg.includes('multiplica') || msg.includes('por')) {
+                            return `🔢 ${a} × ${b} = ${a * b}`;
+                        }
+                        if (msg.includes('/') || msg.includes('divide') || msg.includes('entre')) {
+                            return `🔢 ${a} ÷ ${b} = ${(a / b).toFixed(2)}`;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            // Respuesta genérica inteligente
+            const respuestasGenericas = [
+                `Interesante pregunta sobre "${message.substring(0, 30)}..." 🤔 Déjame pensar... Aunque mi conocimiento es limitado sin conexión a internet, puedo decirte que siempre es bueno investigar más sobre el tema. ¿Hay algo específico que te gustaría saber?`,
+                `Hmm, "${message.substring(0, 30)}..." 🧐 Es un tema interesante. ¿Podrías darme más detalles para ayudarte mejor?`,
+                `¡Buena pregunta! 💡 Sobre eso, te sugiero que me des más contexto para poder darte una respuesta más útil.`,
+                `Entiendo que quieres saber sobre eso 🤖 ¿Me puedes explicar un poco más qué necesitas exactamente?`
+            ];
+            
+            return respuestasGenericas[Math.floor(Math.random() * respuestasGenericas.length)];
+        }
+
+        function clearChat() {
+            chatContainer.innerHTML = `
+                <div class="welcome" id="welcome">
+                    <div class="emoji">🤖</div>
+                    <h2>¡Hola! Soy Pisi</h2>
+                    <p>Tu asistente personal. Pregúntame lo que quieras.</p>
+                    <div class="suggestions">
+                        <div class="suggestion" onclick="askSuggestion('¿Qué puedes hacer?')">¿Qué puedes hacer?</div>
+                        <div class="suggestion" onclick="askSuggestion('Cuéntame un chiste')">Cuéntame un chiste</div>
+                        <div class="suggestion" onclick="askSuggestion('Dame un consejo')">Dame un consejo</div>
+                    </div>
+                </div>
+            `;
+            conversationHistory = [];
+        }
+
+        // Registrar Service Worker para que funcione offline
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>
