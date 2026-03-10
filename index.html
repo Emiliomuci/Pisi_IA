@@ -687,12 +687,12 @@
             <span id="apiText">Sin API</span>
         </div>
         <div class="header-content">
-            <div class="logo">P</div>
+            <div class="logo" id="pisiLogo" onclick="secretTap()">P</div>
             <h1>Pisi</h1>
         </div>
         <div class="header-actions">
-            <button class="header-btn" onclick="showPrompts()">Prompts</button>
-            <button class="header-btn" onclick="showSettings()">API</button>
+            <button class="header-btn" id="btnPrompts" onclick="showPrompts()" style="display:none;">Prompts</button>
+            <button class="header-btn" id="btnAPI" onclick="showSettings()" style="display:none;">API</button>
             <button class="header-btn" onclick="clearChat()">Nueva</button>
         </div>
     </div>
@@ -705,7 +705,7 @@
             
             
 
-            <div class="setup-card" id="setupCard">
+            <div class="setup-card" id="setupCard" style="display:none;">
                 <h3>Conectar con Groq</h3>
                 <p>Pega tu API key de Groq:</p>
                 <input type="password" id="setupApiKey" placeholder="gsk_xxxxxxxxxxxxxxxx">
@@ -804,6 +804,36 @@
         let config = loadConfig();
         let conversationHistory = [];
         let isProcessing = false;
+        let secretTapCount = 0;
+        let secretTapTimer = null;
+
+        // Toque secreto: tocar logo 5 veces para modo admin
+        function secretTap() {
+            secretTapCount++;
+            clearTimeout(secretTapTimer);
+            
+            if (secretTapCount >= 5) {
+                secretTapCount = 0;
+                toggleAdminMode();
+            } else {
+                secretTapTimer = setTimeout(() => {
+                    secretTapCount = 0;
+                }, 2000);
+            }
+        }
+
+        function toggleAdminMode() {
+            const btnAPI = document.getElementById('btnAPI');
+            const btnPrompts = document.getElementById('btnPrompts');
+            const isHidden = btnAPI.style.display === 'none';
+            
+            btnAPI.style.display = isHidden ? 'block' : 'none';
+            btnPrompts.style.display = isHidden ? 'block' : 'none';
+            
+            if (isHidden) {
+                alert('Modo administrador activado');
+            }
+        }
 
         const chatContainer = document.getElementById('chatContainer');
         const userInput = document.getElementById('userInput');
