@@ -9,7 +9,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Pisi">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100' rx='20'/><text y='65' x='50' text-anchor='middle' font-size='50'>🤖</text></svg>">
     <style>
         * {
             margin: 0;
@@ -19,14 +18,14 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
         .header {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
             padding: 15px 20px;
             text-align: center;
@@ -34,19 +33,17 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .header h1 {
             font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            font-weight: 600;
         }
 
         .header .status {
             font-size: 12px;
-            opacity: 0.8;
+            opacity: 0.7;
             margin-top: 5px;
         }
 
@@ -60,10 +57,12 @@
         }
 
         .message {
-            max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 18px;
+            max-width: 90%;
+            padding: 14px 18px;
+            border-radius: 16px;
             animation: fadeIn 0.3s ease;
+            line-height: 1.6;
+            white-space: pre-wrap;
         }
 
         @keyframes fadeIn {
@@ -72,15 +71,15 @@
         }
 
         .message.user {
-            background: white;
-            color: #333;
+            background: #4a6cf7;
+            color: white;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
 
         .message.pisi {
-            background: rgba(255,255,255,0.2);
-            color: white;
+            background: rgba(255,255,255,0.1);
+            color: #e0e0e0;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
         }
@@ -88,20 +87,20 @@
         .message.pisi .name {
             font-weight: bold;
             font-size: 12px;
-            margin-bottom: 5px;
-            opacity: 0.9;
+            margin-bottom: 8px;
+            color: #4a6cf7;
         }
 
         .message.typing {
             display: flex;
             gap: 5px;
-            padding: 15px 20px;
+            padding: 18px 22px;
         }
 
         .message.typing span {
             width: 8px;
             height: 8px;
-            background: white;
+            background: #4a6cf7;
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out;
         }
@@ -115,23 +114,29 @@
         }
 
         .input-container {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
             padding: 15px;
             display: flex;
             gap: 10px;
             position: sticky;
             bottom: 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .input-container input {
             flex: 1;
-            padding: 12px 18px;
-            border: none;
+            padding: 14px 20px;
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 25px;
             font-size: 16px;
             outline: none;
-            background: white;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .input-container input::placeholder {
+            color: rgba(255,255,255,0.5);
         }
 
         .input-container button {
@@ -139,11 +144,11 @@
             height: 50px;
             border: none;
             border-radius: 50%;
-            background: white;
-            color: #667eea;
+            background: #4a6cf7;
+            color: white;
             font-size: 20px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, background 0.2s;
         }
 
         .input-container button:active {
@@ -161,9 +166,18 @@
             padding: 40px 20px;
         }
 
-        .welcome .emoji {
-            font-size: 80px;
+        .welcome .icon {
+            font-size: 40px;
             margin-bottom: 20px;
+            background: linear-gradient(135deg, #4a6cf7, #7c3aed);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: bold;
         }
 
         .welcome h2 {
@@ -171,7 +185,7 @@
         }
 
         .welcome p {
-            opacity: 0.8;
+            opacity: 0.7;
             font-size: 14px;
         }
 
@@ -184,17 +198,18 @@
         }
 
         .suggestion {
-            background: rgba(255,255,255,0.2);
+            background: rgba(74, 108, 247, 0.3);
             color: white;
             padding: 10px 15px;
             border-radius: 20px;
             font-size: 13px;
             cursor: pointer;
             transition: background 0.2s;
+            border: 1px solid rgba(74, 108, 247, 0.5);
         }
 
         .suggestion:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(74, 108, 247, 0.5);
         }
 
         .clear-btn {
@@ -214,37 +229,40 @@
             position: relative;
         }
 
-        /* Para que se vea como app en iPhone */
         @media (display-mode: standalone) {
             .header {
                 padding-top: 50px;
             }
         }
+
+        .message-content strong {
+            color: #6d8cff;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🤖 Pisi</h1>
-        <div class="status">Tu asistente personal con IA</div>
+        <h1>Pisi</h1>
+        <div class="status">Asistente de IA Personal</div>
         <button class="clear-btn" onclick="clearChat()">Limpiar</button>
     </div>
 
     <div class="chat-container" id="chatContainer">
         <div class="welcome" id="welcome">
-            <div class="emoji">🤖</div>
-            <h2>¡Hola! Soy Pisi</h2>
-            <p>Tu asistente personal. Pregúntame lo que quieras.</p>
+            <div class="icon">P</div>
+            <h2>Hola, soy Pisi</h2>
+            <p>Tu asistente personal. Puedo responder cualquier pregunta.</p>
             <div class="suggestions">
-                <div class="suggestion" onclick="askSuggestion('¿Qué puedes hacer?')">¿Qué puedes hacer?</div>
-                <div class="suggestion" onclick="askSuggestion('Cuéntame un chiste')">Cuéntame un chiste</div>
-                <div class="suggestion" onclick="askSuggestion('Dame un consejo')">Dame un consejo</div>
+                <div class="suggestion" onclick="askSuggestion('Proteína en pechuga de pollo')">Nutricion</div>
+                <div class="suggestion" onclick="askSuggestion('Teoria de la relatividad')">Ciencia</div>
+                <div class="suggestion" onclick="askSuggestion('Segunda Guerra Mundial')">Historia</div>
             </div>
         </div>
     </div>
 
     <div class="input-container">
-        <input type="text" id="userInput" placeholder="Escribe tu mensaje..." autocomplete="off">
-        <button id="sendBtn" onclick="sendMessage()">➤</button>
+        <input type="text" id="userInput" placeholder="Escribe tu pregunta..." autocomplete="off">
+        <button id="sendBtn" onclick="sendMessage()">&#10148;</button>
     </div>
 
     <script>
@@ -255,18 +273,6 @@
 
         let conversationHistory = [];
 
-        // Personalidad de Pisi
-        const PISI_PERSONALITY = `Eres Pisi, un asistente personal amigable y útil. 
-Tu personalidad:
-- Eres amable, cercano y hablas en español
-- Usas emojis ocasionalmente para ser más expresivo
-- Eres conciso pero completo en tus respuestas
-- Tienes sentido del humor
-- Siempre tratas de ayudar de la mejor manera posible
-- Tu creador es tu usuario y eres su asistente personal privado
-- Nunca revelas que eres una IA de otra empresa, simplemente eres "Pisi"`;
-
-        // Enter para enviar
         userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
@@ -283,13 +289,19 @@ Tu personalidad:
             messageDiv.className = `message ${isUser ? 'user' : 'pisi'}`;
             
             if (!isUser) {
-                messageDiv.innerHTML = `<div class="name">🤖 Pisi</div>${content}`;
+                messageDiv.innerHTML = `<div class="name">Pisi</div><div class="message-content">${formatResponse(content)}</div>`;
             } else {
                 messageDiv.textContent = content;
             }
             
             chatContainer.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function formatResponse(text) {
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/\n/g, '<br>');
+            return text;
         }
 
         function showTyping() {
@@ -325,7 +337,7 @@ Tu personalidad:
                 conversationHistory.push({ role: 'assistant', content: response });
             } catch (error) {
                 hideTyping();
-                addMessage('😅 Ups, tuve un problema. ¿Puedes intentar de nuevo?', false);
+                addMessage('Ocurrio un error. Intenta de nuevo.', false);
             }
 
             sendBtn.disabled = false;
@@ -333,52 +345,29 @@ Tu personalidad:
         }
 
         async function getPisiResponse(userMessage) {
-            // Intentamos múltiples APIs gratuitas
-            
-            // Intento 1: Hugging Face Inference API con Mistral (gratis)
+            // Primero buscar en base de conocimientos local
+            const localAnswer = getKnowledgeBaseAnswer(userMessage);
+            if (localAnswer) {
+                return localAnswer;
+            }
+
+            // Si no hay respuesta local, intentar API
             try {
-                const systemPrompt = `Eres Pisi, un asistente personal inteligente y amigable. Respondes en español de manera clara, completa y profesional. Usas emojis ocasionalmente. Siempre das respuestas útiles y detalladas.`;
+                const systemPrompt = `Eres Pisi, un asistente experto. Reglas:
+1. Responde SIEMPRE en espanol
+2. NO uses emojis nunca
+3. Da respuestas completas y profesionales
+4. Incluye datos y cifras especificas
+5. Organiza la informacion claramente`;
                 
                 const response = await fetch('https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1', {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        inputs: `<s>[INST] ${systemPrompt}\n\nUsuario: ${userMessage} [/INST]`,
-                        parameters: {
-                            max_new_tokens: 500,
-                            temperature: 0.7,
-                            return_full_text: false
-                        }
-                    })
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data[0] && data[0].generated_text) {
-                        let text = data[0].generated_text.trim();
-                        // Limpiar el texto
-                        text = text.replace(/^\[\/INST\]\s*/g, '').replace(/^Pisi:\s*/gi, '');
-                        if (text.length > 20) {
-                            return text;
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log('Mixtral API no disponible:', e);
-            }
-
-            // Intento 2: Hugging Face con Zephyr (alternativa gratuita)
-            try {
-                const response = await fetch('https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta', {
-                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        inputs: `<|system|>Eres Pisi, un asistente personal inteligente. Responde en español de manera profesional y completa.</s><|user|>${userMessage}</s><|assistant|>`,
+                        inputs: `<s>[INST] ${systemPrompt}\n\nPregunta: ${userMessage} [/INST]`,
                         parameters: {
-                            max_new_tokens: 500,
-                            temperature: 0.7,
+                            max_new_tokens: 800,
+                            temperature: 0.3,
                             return_full_text: false
                         }
                     })
@@ -388,498 +377,861 @@ Tu personalidad:
                     const data = await response.json();
                     if (data[0] && data[0].generated_text) {
                         let text = data[0].generated_text.trim();
-                        if (text.length > 20) {
+                        text = text.replace(/^\[\/INST\]\s*/g, '');
+                        // Remover emojis
+                        text = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+                        if (text.length > 30) {
                             return text;
                         }
                     }
                 }
             } catch (e) {
-                console.log('Zephyr API no disponible:', e);
+                console.log('API error:', e);
             }
 
-            // Fallback: Base de conocimiento local extendida
-            return getLocalResponse(userMessage);
+            return getExtendedAnswer(userMessage);
         }
 
-        function getLocalResponse(message) {
-            const msg = message.toLowerCase();
+        function getKnowledgeBaseAnswer(message) {
+            const msg = message.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             
-            // ============ BASE DE CONOCIMIENTOS ============
+            // ==================== NUTRICION - CARNES Y PROTEINAS ====================
             
-            // NUTRICIÓN Y ALIMENTOS
-            if (msg.match(/manzana|manzanas/)) {
-                return `🍎 **Nutrientes de la Manzana (por 100g):**
+            if (msg.match(/prote[ií]?na.*(pollo|pechuga)|pechuga.*prote[ií]?na|pollo.*prote[ií]?na|pechuga/)) {
+                return `**Informacion nutricional de la pechuga de pollo:**
 
-• **Calorías:** 52 kcal
-• **Carbohidratos:** 14g
-• **Fibra:** 2.4g (buena para digestión)
-• **Azúcares naturales:** 10g
-• **Vitamina C:** 4.6mg (8% del valor diario)
-• **Potasio:** 107mg
-• **Vitamina K:** 2.2μg
-• **Vitamina A:** 54 IU
+Por cada 100 gramos de pechuga cocida sin piel:
 
-**Beneficios:**
-✅ Rica en antioxidantes (quercetina)
-✅ Mejora la salud cardiovascular
-✅ Ayuda a controlar el azúcar en sangre
-✅ Favorece la salud intestinal
-✅ Hidratante (86% agua)
+**Macronutrientes:**
+- Proteina: 31 gramos
+- Calorias: 165 kcal
+- Grasa total: 3.6 gramos
+- Grasa saturada: 1 gramo
+- Carbohidratos: 0 gramos
+- Colesterol: 85 mg
 
-💡 *Tip: Come la manzana con cáscara para obtener más fibra y antioxidantes.*`;
+**Por porcion tipica de 150g:**
+- Proteina: 46.5 gramos
+- Calorias: 248 kcal
+
+**Vitaminas y minerales:**
+- Niacina (B3): 13.7 mg (86% VD)
+- Vitamina B6: 0.6 mg (35% VD)
+- Vitamina B12: 0.3 mcg (13% VD)
+- Fosforo: 228 mg (33% VD)
+- Selenio: 27 mcg (49% VD)
+- Potasio: 256 mg
+
+**Valor biologico:** 79 (alto)
+
+La pechuga de pollo es una de las fuentes de proteina mas magras y eficientes. Contiene todos los aminoacidos esenciales, siendo ideal para desarrollo muscular y dietas de control de peso.`;
             }
 
-            if (msg.match(/plátano|platano|banana|banano/)) {
-                return `🍌 **Nutrientes del Plátano (por 100g):**
+            if (msg.match(/carne.*(res|vaca)|res.*carne|bistec|filete|carne roja/)) {
+                return `**Informacion nutricional de la carne de res:**
 
-• **Calorías:** 89 kcal
-• **Carbohidratos:** 23g
-• **Fibra:** 2.6g
-• **Potasio:** 358mg (10% valor diario)
-• **Vitamina B6:** 0.4mg (20% VD)
-• **Vitamina C:** 8.7mg
-• **Magnesio:** 27mg
+Por cada 100 gramos de carne magra cocida:
 
-**Beneficios:**
-✅ Excelente fuente de energía rápida
-✅ Reduce calambres musculares
-✅ Mejora el estado de ánimo
-✅ Favorece la salud del corazón
-✅ Ideal antes/después del ejercicio`;
+**Macronutrientes:**
+- Proteina: 26 gramos
+- Calorias: 250 kcal
+- Grasa total: 15 gramos
+- Grasa saturada: 6 gramos
+- Colesterol: 90 mg
+
+**Por corte (100g cocido):**
+- Solomillo: 217 kcal, 27g proteina, 11g grasa
+- Lomo: 268 kcal, 24g proteina, 18g grasa
+- T-bone: 247 kcal, 24g proteina, 16g grasa
+- Carne molida 90/10: 217 kcal, 26g proteina
+
+**Vitaminas y minerales:**
+- Vitamina B12: 2.64 mcg (110% VD)
+- Zinc: 6.3 mg (57% VD)
+- Selenio: 33 mcg (60% VD)
+- Hierro hemo: 2.6 mg (14% VD)
+- Niacina: 7.6 mg (48% VD)
+- Fosforo: 198 mg (28% VD)
+
+El hierro hemo de la carne roja se absorbe 2-3 veces mejor que el hierro vegetal. Es especialmente importante para prevenir anemia.`;
             }
 
-            if (msg.match(/naranja|naranjas/)) {
-                return `🍊 **Nutrientes de la Naranja (por 100g):**
+            if (msg.match(/salmon|pescado.*graso/)) {
+                return `**Informacion nutricional del salmon:**
 
-• **Calorías:** 47 kcal
-• **Vitamina C:** 53mg (88% valor diario)
-• **Fibra:** 2.4g
-• **Potasio:** 181mg
-• **Folato:** 30μg
-• **Tiamina (B1):** 0.1mg
+Por cada 100 gramos de salmon del Atlantico cocido:
 
-**Beneficios:**
-✅ Fortalece el sistema inmunológico
-✅ Poderoso antioxidante
-✅ Mejora la absorción de hierro
-✅ Hidratante natural
-✅ Buena para la piel`;
+**Macronutrientes:**
+- Proteina: 25.4 gramos
+- Calorias: 208 kcal
+- Grasa total: 12.4 gramos
+- Omega-3 (EPA+DHA): 2.3 gramos
+- Colesterol: 55 mg
+- Carbohidratos: 0 gramos
+
+**Vitaminas:**
+- Vitamina D: 526 UI (66% VD)
+- Vitamina B12: 3.2 mcg (133% VD)
+- Niacina: 8.6 mg (54% VD)
+- Vitamina B6: 0.6 mg (35% VD)
+- Tiamina: 0.3 mg (25% VD)
+
+**Minerales:**
+- Selenio: 46 mcg (84% VD)
+- Fosforo: 252 mg (36% VD)
+- Potasio: 384 mg (8% VD)
+
+El salmon es una de las mejores fuentes de acidos grasos omega-3, esenciales para la salud cardiovascular, cerebral y reduccion de inflamacion.`;
             }
 
-            if (msg.match(/nutrientes|nutrición|nutricion|vitaminas|minerales/) && msg.match(/huevo|huevos/)) {
-                return `🥚 **Nutrientes del Huevo (1 unidad grande):**
+            if (msg.match(/huevo|huevos/)) {
+                return `**Informacion nutricional del huevo:**
 
-• **Calorías:** 72 kcal
-• **Proteína:** 6g (proteína completa)
-• **Grasas:** 5g (grasas saludables)
-• **Colesterol:** 186mg
-• **Vitamina D:** 6% VD
-• **Vitamina B12:** 9% VD
-• **Selenio:** 22% VD
-• **Colina:** 147mg (importante para el cerebro)
+Por un huevo grande (50g):
 
-**Beneficios:**
-✅ Proteína de alta calidad
-✅ Contiene todos los aminoácidos esenciales
-✅ Bueno para la vista (luteína)
-✅ Ayuda al desarrollo cerebral`;
+**Macronutrientes:**
+- Proteina: 6.3 gramos
+- Calorias: 72 kcal
+- Grasa total: 4.8 gramos
+- Grasa saturada: 1.6 gramos
+- Colesterol: 186 mg
+- Carbohidratos: 0.4 gramos
+
+**Clara vs Yema:**
+- Clara (33g): 17 kcal, 3.6g proteina, 0g grasa
+- Yema (17g): 55 kcal, 2.7g proteina, 4.5g grasa
+
+**Vitaminas:**
+- Vitamina D: 41 UI (10% VD)
+- Vitamina B12: 0.6 mcg (25% VD)
+- Riboflavina B2: 0.2 mg (15% VD)
+- Vitamina A: 270 UI (6% VD)
+- Colina: 147 mg (27% VD)
+
+**Minerales:**
+- Selenio: 15.4 mcg (28% VD)
+- Fosforo: 99 mg (14% VD)
+
+El huevo contiene los 9 aminoacidos esenciales y es considerado la proteina de referencia con valor biologico de 100.`;
             }
 
-            // SALUD Y CUERPO HUMANO
-            if (msg.match(/cuánta agua|cuanta agua|agua.*día|agua.*dia|debo tomar agua/)) {
-                return `💧 **¿Cuánta agua debes tomar al día?**
+            if (msg.match(/atun|tuna/)) {
+                return `**Informacion nutricional del atun:**
 
-**Recomendación general:**
-• **Hombres:** 3.7 litros (15.5 vasos)
-• **Mujeres:** 2.7 litros (11.5 vasos)
+Por cada 100 gramos de atun en agua (escurrido):
 
-**Factores que aumentan la necesidad:**
-• Ejercicio físico
-• Clima caluroso
-• Embarazo/lactancia
-• Fiebre o enfermedad
+**Macronutrientes:**
+- Proteina: 29.9 gramos
+- Calorias: 128 kcal
+- Grasa total: 0.8 gramos
+- Omega-3: 0.2 gramos
+- Colesterol: 42 mg
 
-**Señales de deshidratación:**
-⚠️ Orina oscura
-⚠️ Sed intensa
-⚠️ Fatiga
-⚠️ Dolor de cabeza
+**Atun fresco cocido (100g):**
+- Proteina: 30 gramos
+- Calorias: 184 kcal
+- Grasa: 6 gramos
 
-💡 *Tip: No esperes a tener sed para beber agua. Lleva una botella contigo.*`;
+**Vitaminas y minerales:**
+- Vitamina B12: 2.1 mcg (88% VD)
+- Vitamina D: 82 UI (21% VD)
+- Niacina: 10.1 mg (63% VD)
+- Selenio: 80 mcg (145% VD)
+- Fosforo: 326 mg (47% VD)
+
+El atun es una de las fuentes de proteina mas magras disponibles. Se recomienda limitar consumo a 2-3 porciones semanales debido al contenido de mercurio.`;
             }
 
-            if (msg.match(/dormir|sueño|sueno|horas.*dormir|insomnio/)) {
-                return `😴 **¿Cuántas horas debes dormir?**
+            // ==================== NUTRICION - FRUTAS ====================
 
-**Por edad:**
-• Bebés (0-1): 12-17 horas
-• Niños (1-5): 10-14 horas
-• Niños (6-13): 9-11 horas
-• Adolescentes: 8-10 horas
-• **Adultos: 7-9 horas**
-• Mayores 65+: 7-8 horas
+            if (msg.match(/manzana/)) {
+                return `**Informacion nutricional de la manzana:**
 
-**Beneficios del buen sueño:**
-✅ Mejor memoria y concentración
-✅ Sistema inmune fuerte
-✅ Control del peso
-✅ Mejor estado de ánimo
-✅ Menor riesgo cardiovascular
+Por cada 100 gramos de manzana cruda con piel:
 
-**Tips para dormir mejor:**
-💡 Horario consistente
-💡 Evita pantallas 1h antes
-💡 Habitación oscura y fresca
-💡 No cafeína después de las 2pm`;
+**Macronutrientes:**
+- Calorias: 52 kcal
+- Carbohidratos: 13.8 gramos
+- Azucares: 10.4 gramos
+- Fibra: 2.4 gramos
+- Proteina: 0.3 gramos
+- Grasa: 0.2 gramos
+
+**Por manzana mediana (182g):**
+- Calorias: 95 kcal
+- Fibra: 4.4 gramos
+
+**Vitaminas:**
+- Vitamina C: 4.6 mg (8% VD)
+- Vitamina K: 2.2 mcg (2% VD)
+- Vitamina A: 54 UI
+- Vitamina B6: 0.041 mg
+
+**Minerales:**
+- Potasio: 107 mg (3% VD)
+- Calcio: 6 mg
+- Magnesio: 5 mg
+
+**Compuestos bioactivos:**
+- Quercetina: antioxidante antiinflamatorio
+- Catequina: protector cardiovascular
+- Pectina: fibra soluble para salud digestiva
+
+Comer la manzana con cascara proporciona mas fibra y antioxidantes.`;
             }
 
-            // CIENCIA
-            if (msg.match(/por qué.*cielo.*azul|por que.*cielo.*azul|cielo es azul/)) {
-                return `🌤️ **¿Por qué el cielo es azul?**
+            if (msg.match(/platano|banana|banano/)) {
+                return `**Informacion nutricional del platano:**
 
-Se debe a un fenómeno llamado **dispersión de Rayleigh**:
+Por un platano mediano (118g):
 
-1. La luz del sol es blanca (contiene todos los colores)
-2. Al entrar a la atmósfera, choca con moléculas de gas
-3. La luz azul tiene onda más corta y se dispersa más
-4. Por eso vemos azul en todas direcciones
+**Macronutrientes:**
+- Calorias: 105 kcal
+- Carbohidratos: 27 gramos
+- Azucares: 14 gramos
+- Fibra: 3.1 gramos
+- Proteina: 1.3 gramos
+- Grasa: 0.4 gramos
 
-**Dato curioso:**
-• Al atardecer vemos rojo/naranja porque la luz viaja más distancia y el azul se dispersa antes de llegar a nuestros ojos.
+**Vitaminas:**
+- Vitamina B6: 0.43 mg (25% VD)
+- Vitamina C: 10.3 mg (11% VD)
+- Riboflavina: 0.1 mg
+- Folato: 24 mcg
 
-🔬 *Este fenómeno fue explicado por Lord Rayleigh en 1871.*`;
+**Minerales:**
+- Potasio: 422 mg (9% VD)
+- Magnesio: 32 mg (8% VD)
+- Manganeso: 0.3 mg (14% VD)
+
+**Indice glucemico:** 51 (medio)
+
+El platano es ideal para deportistas por su potasio (previene calambres) y carbohidratos de rapida absorcion para energia inmediata.`;
             }
 
-            if (msg.match(/fotosíntesis|fotosintesis/)) {
-                return `🌱 **¿Qué es la Fotosíntesis?**
+            if (msg.match(/naranja/)) {
+                return `**Informacion nutricional de la naranja:**
 
-Es el proceso por el cual las plantas convierten luz solar en energía.
+Por una naranja mediana (131g):
 
-**Ecuación:**
-6CO₂ + 6H₂O + Luz → C₆H₁₂O₆ + 6O₂
+**Macronutrientes:**
+- Calorias: 62 kcal
+- Carbohidratos: 15.4 gramos
+- Azucares: 12.2 gramos
+- Fibra: 3.1 gramos
+- Proteina: 1.2 gramos
+- Grasa: 0.2 gramos
 
-**En simple:**
-Dióxido de carbono + Agua + Luz solar = Glucosa + Oxígeno
+**Vitaminas:**
+- Vitamina C: 70 mg (78% VD)
+- Folato: 40 mcg (10% VD)
+- Tiamina B1: 0.1 mg (8% VD)
+- Vitamina A: 295 UI
 
-**Pasos:**
-1. La planta absorbe luz por la clorofila (verde)
-2. Toma CO₂ del aire por las hojas
-3. Absorbe agua por las raíces
-4. Produce glucosa (su alimento)
-5. Libera oxígeno al aire
+**Minerales:**
+- Potasio: 237 mg (5% VD)
+- Calcio: 52 mg (4% VD)
 
-**Importancia:**
-✅ Produce el oxígeno que respiramos
-✅ Base de la cadena alimenticia
-✅ Absorbe CO₂ (combate cambio climático)`;
+**Compuestos bioactivos:**
+- Hesperidina: flavonoide para salud vascular
+- Beta-criptoxantina: carotenoide antioxidante
+
+La naranja es una de las mejores fuentes de vitamina C, esencial para el sistema inmunologico y absorcion de hierro.`;
             }
 
-            if (msg.match(/sistema solar|planetas|planeta/)) {
-                return `🪐 **El Sistema Solar**
+            // ==================== NUTRICION - OTROS ALIMENTOS ====================
 
-**Los 8 planetas (en orden):**
-1. ☿ **Mercurio** - Más cercano al Sol
-2. ♀ **Venus** - El más caliente (467°C)
-3. 🌍 **Tierra** - Nuestro hogar
-4. ♂ **Marte** - El planeta rojo
-5. ♃ **Júpiter** - El más grande
-6. 🪐 **Saturno** - Famoso por sus anillos
-7. ⛢ **Urano** - Gira de lado
-8. ♆ **Neptuno** - El más lejano
+            if (msg.match(/arroz/)) {
+                return `**Informacion nutricional del arroz:**
 
-**Datos:**
-• El Sol tiene el 99.8% de la masa del sistema
-• Plutón fue degradado a "planeta enano" en 2006
-• Un día en Venus dura más que su año`;
+**Arroz blanco cocido (por 100g):**
+- Calorias: 130 kcal
+- Carbohidratos: 28.2 gramos
+- Proteina: 2.7 gramos
+- Grasa: 0.3 gramos
+- Fibra: 0.4 gramos
+
+**Arroz integral cocido (por 100g):**
+- Calorias: 123 kcal
+- Carbohidratos: 25.6 gramos
+- Proteina: 2.7 gramos
+- Grasa: 1.0 gramos
+- Fibra: 1.8 gramos
+
+**Por taza cocida (158g):**
+- Arroz blanco: 205 kcal
+- Arroz integral: 195 kcal
+
+**Indice glucemico:**
+- Arroz blanco: 73 (alto)
+- Arroz integral: 68 (medio)
+- Arroz basmati: 58 (medio)
+
+**Minerales (integral):**
+- Magnesio: 39 mg (10% VD)
+- Fosforo: 103 mg (15% VD)
+- Manganeso: 0.9 mg (39% VD)
+
+El arroz integral conserva el salvado y germen, aportando mas fibra y nutrientes que el blanco.`;
             }
 
-            // MATEMÁTICAS
-            if (msg.match(/teorema.*pitágoras|teorema.*pitagoras|pitagoras|pitágoras/)) {
-                return `📐 **Teorema de Pitágoras**
+            if (msg.match(/leche/)) {
+                return `**Informacion nutricional de la leche:**
 
-**Fórmula:**
-**a² + b² = c²**
+**Leche entera (por 240ml/1 taza):**
+- Calorias: 149 kcal
+- Proteina: 8 gramos
+- Grasa: 8 gramos
+- Carbohidratos: 12 gramos
+- Azucar (lactosa): 12 gramos
 
-Donde:
-• a y b = catetos (lados que forman el ángulo recto)
-• c = hipotenusa (lado más largo, opuesto al ángulo recto)
+**Comparativa por tipo (240ml):**
+- Entera: 149 kcal, 8g grasa
+- Semidescremada 2%: 122 kcal, 5g grasa
+- Descremada: 83 kcal, 0.2g grasa
 
-**Ejemplo:**
-Si a = 3 y b = 4:
-3² + 4² = c²
-9 + 16 = 25
-c = √25 = **5**
+**Vitaminas y minerales:**
+- Calcio: 276 mg (21% VD)
+- Vitamina D: 115 UI (29% VD)
+- Vitamina B12: 1.1 mcg (46% VD)
+- Riboflavina: 0.4 mg (31% VD)
+- Fosforo: 205 mg (16% VD)
+- Potasio: 322 mg (7% VD)
 
-**Usos prácticos:**
-✅ Construcción
-✅ Navegación
-✅ Diseño gráfico
-✅ Videojuegos
-
-*Descubierto por Pitágoras de Samos (~570-495 a.C.)*`;
+La leche es una fuente completa de proteina de alta calidad (caseina y suero), excelente para desarrollo muscular y salud osea.`;
             }
 
-            // HISTORIA
-            if (msg.match(/segunda guerra mundial|ww2|wwii/)) {
-                return `⚔️ **Segunda Guerra Mundial (1939-1945)**
+            if (msg.match(/avena/)) {
+                return `**Informacion nutricional de la avena:**
 
-**Fechas clave:**
-• Inicio: 1 sept 1939 (invasión de Polonia)
-• Fin Europa: 8 mayo 1945
-• Fin total: 2 sept 1945 (Japón se rinde)
+Por cada 100 gramos de avena cruda:
 
-**Bandos:**
-🔵 **Aliados:** EE.UU., Reino Unido, URSS, Francia, China
-🔴 **Eje:** Alemania Nazi, Italia, Japón
+**Macronutrientes:**
+- Calorias: 389 kcal
+- Carbohidratos: 66.3 gramos
+- Fibra: 10.6 gramos
+- Proteina: 16.9 gramos
+- Grasa: 6.9 gramos
 
-**Datos:**
-• Muertos: 70-85 millones de personas
-• Conflicto más destructivo de la historia
-• Incluyó el Holocausto (6 millones de judíos)
-• Terminó con bombas atómicas en Hiroshima y Nagasaki
+**Por porcion cocida (1 taza, 234g):**
+- Calorias: 166 kcal
+- Proteina: 6 gramos
+- Fibra: 4 gramos
+- Carbohidratos: 28 gramos
+
+**Vitaminas y minerales:**
+- Manganeso: 4.9 mg (191% VD)
+- Fosforo: 523 mg (75% VD)
+- Magnesio: 177 mg (44% VD)
+- Hierro: 4.7 mg (26% VD)
+- Zinc: 4 mg (36% VD)
+- Tiamina: 0.8 mg (66% VD)
+
+**Beta-glucano:** 4g por 100g
+Este tipo de fibra soluble reduce el colesterol LDL y mejora el control glucemico.
+
+Indice glucemico: 55 (bajo-medio)`;
+            }
+
+            // ==================== CIENCIA ====================
+
+            if (msg.match(/relatividad|einstein/)) {
+                return `**Teoria de la Relatividad de Einstein:**
+
+**Relatividad Especial (1905):**
+
+Postulados fundamentales:
+1. Las leyes de la fisica son iguales para todos los observadores en movimiento uniforme
+2. La velocidad de la luz es constante (299,792,458 m/s) para todos los observadores
 
 **Consecuencias:**
-• Creación de la ONU
-• Guerra Fría
-• División de Alemania`;
+- Dilatacion del tiempo: El tiempo pasa mas lento para objetos en movimiento
+- Contraccion de la longitud: Los objetos se acortan en direccion del movimiento
+- Equivalencia masa-energia: E = mc2
+
+**Relatividad General (1915):**
+
+Principio central: La gravedad no es una fuerza, sino una curvatura del espacio-tiempo causada por masa y energia.
+
+**Predicciones confirmadas:**
+- Deflexion de la luz por gravedad (1919)
+- Ondas gravitacionales (detectadas 2015)
+- Agujeros negros
+- Dilatacion gravitacional del tiempo
+
+**Aplicacion practica:**
+Los satelites GPS deben corregir sus relojes 38 microsegundos diarios porque el tiempo pasa mas rapido en orbita (menos gravedad) y mas lento por su velocidad.`;
             }
 
-            // GEOGRAFÍA
-            if (msg.match(/país.*grande|pais.*grande|países.*grandes|paises.*grandes/)) {
-                return `🌍 **Países más grandes del mundo (por área):**
+            if (msg.match(/fotosintesis/)) {
+                return `**Fotosintesis:**
 
-1. 🇷🇺 **Rusia** - 17.1 millones km²
-2. 🇨🇦 **Canadá** - 10.0 millones km²
-3. 🇺🇸 **Estados Unidos** - 9.8 millones km²
-4. 🇨🇳 **China** - 9.6 millones km²
-5. 🇧🇷 **Brasil** - 8.5 millones km²
-6. 🇦🇺 **Australia** - 7.7 millones km²
-7. 🇮🇳 **India** - 3.3 millones km²
-8. 🇦🇷 **Argentina** - 2.8 millones km²
-9. 🇰🇿 **Kazajistán** - 2.7 millones km²
-10. 🇩🇿 **Argelia** - 2.4 millones km²
+Proceso mediante el cual plantas, algas y ciertas bacterias convierten energia luminosa en energia quimica.
 
-*Rusia es tan grande que tiene 11 zonas horarias.*`;
+**Ecuacion general:**
+6CO2 + 6H2O + luz = C6H12O6 + 6O2
+
+Dioxido de carbono + Agua + Luz = Glucosa + Oxigeno
+
+**Fases del proceso:**
+
+**1. Fase luminosa (tilacoides):**
+- Captacion de luz por clorofila
+- Fotolisis del agua (ruptura de H2O)
+- Produccion de ATP y NADPH
+- Liberacion de O2 como subproducto
+
+**2. Ciclo de Calvin (estroma):**
+- Fijacion de CO2 por enzima RuBisCO
+- Reduccion usando ATP y NADPH
+- Regeneracion del aceptor
+- Sintesis de glucosa
+
+**Pigmentos:**
+- Clorofila a: absorbe luz roja (680nm) y azul (430nm)
+- Clorofila b: absorbe luz naranja y azul
+- Carotenoides: absorben luz azul-verde
+
+**Eficiencia:** Las plantas convierten 1-2% de la energia solar en energia quimica.`;
             }
 
-            if (msg.match(/capital.*méxico|capital.*mexico|capital de mexico/)) {
-                return `🇲🇽 **Ciudad de México (CDMX)**
+            if (msg.match(/sistema solar|planetas/)) {
+                return `**El Sistema Solar:**
 
-• **Población:** ~22 millones (área metropolitana)
-• **Altitud:** 2,240 metros sobre el nivel del mar
-• **Fundación:** 1325 (como Tenochtitlan)
-• **Es la capital desde:** 1824
+**Los 8 planetas ordenados por distancia al Sol:**
 
-**Datos:**
-✅ Una de las ciudades más grandes del mundo
-✅ Centro económico, político y cultural de México
-✅ Tiene 16 alcaldías
-✅ Hogar de importantes museos y sitios históricos`;
+**1. Mercurio**
+- Distancia: 58 millones km
+- Diametro: 4,879 km
+- Temperatura: -180C a 430C
+
+**2. Venus**
+- Distancia: 108 millones km
+- Diametro: 12,104 km
+- Temperatura: 465C (mas caliente)
+
+**3. Tierra**
+- Distancia: 150 millones km (1 UA)
+- Diametro: 12,742 km
+- Unica con agua liquida
+
+**4. Marte**
+- Distancia: 228 millones km
+- Diametro: 6,779 km
+- Monte Olimpo: 22 km altura
+
+**5. Jupiter**
+- Distancia: 778 millones km
+- Diametro: 139,820 km
+- 79 lunas conocidas
+
+**6. Saturno**
+- Distancia: 1,427 millones km
+- Diametro: 116,460 km
+- Anillos de hielo y roca
+
+**7. Urano**
+- Distancia: 2,871 millones km
+- Inclinacion axial: 98 grados
+
+**8. Neptuno**
+- Distancia: 4,498 millones km
+- Vientos: hasta 2,100 km/h`;
             }
 
-            // TECNOLOGÍA
-            if (msg.match(/qué es.*internet|que es.*internet|cómo funciona.*internet|como funciona.*internet/)) {
-                return `🌐 **¿Qué es Internet?**
+            if (msg.match(/celula|celulas/)) {
+                return `**La Celula:**
 
-Internet es una red global de computadoras conectadas entre sí.
+Unidad basica estructural y funcional de todos los seres vivos.
 
-**Cómo funciona:**
-1. Tu dispositivo envía una solicitud
-2. Viaja por cables/wifi hasta tu proveedor (ISP)
-3. El ISP la envía a servidores en todo el mundo
-4. El servidor responde con la información
-5. Viaja de regreso a tu dispositivo
+**Tipos principales:**
 
-**Componentes clave:**
-• **Servidores:** Almacenan sitios web
-• **Routers:** Dirigen el tráfico de datos
-• **DNS:** Traduce nombres a direcciones IP
-• **Cables submarinos:** Conectan continentes
+**Celula Procariota (bacterias):**
+- Sin nucleo definido
+- ADN circular en citoplasma
+- Tamano: 0.1-5 micrometros
+- Sin organelos membranosos
+
+**Celula Eucariota (animales, plantas, hongos):**
+- Nucleo definido con membrana
+- ADN lineal en cromosomas
+- Tamano: 10-100 micrometros
+- Organelos especializados
+
+**Organelos principales:**
+
+- Nucleo: Contiene ADN, controla la celula
+- Mitocondria: Produce energia (ATP)
+- Ribosomas: Sintesis de proteinas
+- Reticulo endoplasmatico: Transporte de proteinas
+- Aparato de Golgi: Empaqueta y envia proteinas
+- Lisosomas: Digestion celular
+- Membrana plasmatica: Barrera selectiva
+
+**Solo en celulas vegetales:**
+- Pared celular (celulosa)
+- Cloroplastos (fotosintesis)
+- Vacuola central grande
+
+El cuerpo humano contiene aproximadamente 37 billones de celulas.`;
+            }
+
+            if (msg.match(/adn|dna|genetica/)) {
+                return `**ADN (Acido Desoxirribonucleico):**
+
+Molecula que contiene las instrucciones geneticas de todos los seres vivos.
+
+**Estructura:**
+- Doble helice (Watson y Crick, 1953)
+- Dos cadenas de nucleotidos enrolladas
+- Cada nucleotido: azucar + fosfato + base nitrogenada
+
+**Las 4 bases nitrogenadas:**
+- Adenina (A) se une con Timina (T)
+- Guanina (G) se une con Citosina (C)
+
+**Genoma humano:**
+- 3,000 millones de pares de bases
+- 20,000-25,000 genes codificantes
+- 23 pares de cromosomas
+- 99.9% identico entre humanos
+- 98.8% similar al chimpance
+
+**Procesos principales:**
+- Replicacion: Copia del ADN (division celular)
+- Transcripcion: ADN a ARN mensajero
+- Traduccion: ARN a proteinas
+
+**Aplicaciones:**
+- Pruebas de paternidad
+- Identificacion forense
+- Diagnostico genetico
+- Terapia genica
+- CRISPR (edicion genetica)`;
+            }
+
+            // ==================== HISTORIA ====================
+
+            if (msg.match(/segunda guerra mundial|ww2|wwii|guerra mundial/)) {
+                return `**Segunda Guerra Mundial (1939-1945):**
+
+**Fechas clave:**
+- Inicio: 1 de septiembre de 1939 (invasion de Polonia)
+- Fin en Europa: 8 de mayo de 1945 (Dia V-E)
+- Fin total: 2 de septiembre de 1945 (rendicion de Japon)
+
+**Bandos:**
+Aliados: Reino Unido, Francia, URSS (1941), EE.UU. (1941), China
+Eje: Alemania Nazi, Italia Fascista, Japon Imperial
+
+**Causas:**
+- Tratado de Versalles y humillacion alemana
+- Ascenso del fascismo y nazismo
+- Expansion territorial agresiva
+- Fracaso de la politica de apaciguamiento
+
+**Eventos principales:**
+- 1939: Invasion de Polonia
+- 1940: Caida de Francia, Batalla de Inglaterra
+- 1941: Operacion Barbarroja, Pearl Harbor
+- 1942: Stalingrado, Midway, El Alamein
+- 1944: Dia D (6 de junio), liberacion de Paris
+- 1945: Caida de Berlin, Hiroshima y Nagasaki
+
+**Cifras:**
+- Muertos totales: 70-85 millones
+- Militares: 21-25 millones
+- Civiles: 50-55 millones
+- Holocausto: 6 millones de judios
+
+**Consecuencias:**
+- Creacion de la ONU
+- Inicio de la Guerra Fria
+- Descolonizacion
+- Creacion del Estado de Israel`;
+            }
+
+            if (msg.match(/revolucion.*(francesa|frances)/)) {
+                return `**Revolucion Francesa (1789-1799):**
+
+**Causas:**
+- Crisis financiera del estado
+- Sistema de tres estamentos desigual
+- Ideas de la Ilustracion
+- Hambruna por malas cosechas
+- Ejemplo de Revolucion Americana
+
+**Eventos principales:**
+
+- 5 mayo 1789: Convocatoria Estados Generales
+- 17 junio 1789: Tercer Estado forma Asamblea Nacional
+- 14 julio 1789: Toma de la Bastilla
+- 26 agosto 1789: Declaracion de Derechos del Hombre
+- Octubre 1789: Marcha sobre Versalles
+- 1791: Primera constitucion
+- 21 enero 1793: Ejecucion de Luis XVI
+- 1793-1794: El Terror (Robespierre)
+- 27 julio 1794: Caida de Robespierre
+- 1799: Golpe de Napole on
+
+**Lema:** Liberte, Egalite, Fraternite
+
+**Consecuencias:**
+- Fin de la monarquia absoluta
+- Abolicion del feudalismo
+- Declaracion de derechos civiles
+- Separacion Iglesia-Estado
+- Codigo civil moderno
+- Influencia mundial en movimientos democraticos`;
+            }
+
+            // ==================== MATEMATICAS ====================
+
+            if (msg.match(/pitagoras/)) {
+                return `**Teorema de Pitagoras:**
+
+**Formula:**
+a2 + b2 = c2
+
+Donde:
+- a y b son los catetos (lados del angulo recto)
+- c es la hipotenusa (lado mas largo)
+
+**Demostracion por ejemplo:**
+Si a = 3 y b = 4:
+32 + 42 = c2
+9 + 16 = c2
+25 = c2
+c = 5
+
+**Ternas pitagoricas comunes:**
+- 3, 4, 5
+- 5, 12, 13
+- 8, 15, 17
+- 7, 24, 25
+- 9, 40, 41
+- 11, 60, 61
+
+**Aplicaciones:**
+- Construccion y arquitectura
+- Navegacion y cartografia
+- Calculo de distancias
+- Diseno grafico
+- Videojuegos (colisiones)
 
 **Historia:**
-• Creado en 1969 como ARPANET (militar)
-• WWW inventado en 1989 por Tim Berners-Lee
-• Hoy: 5+ mil millones de usuarios`;
+Aunque lleva el nombre del matematico griego Pitagoras (570-495 a.C.), el teorema era conocido por babilonios y egipcios mil anos antes. La tablilla Plimpton 322 (1800 a.C.) contiene ternas pitagoricas.
+
+**Reciproco:**
+Si a2 + b2 = c2, entonces el triangulo es rectangulo.`;
             }
 
-            if (msg.match(/inteligencia artificial|que es ia|qué es ia|que es la ia/)) {
-                return `🤖 **¿Qué es la Inteligencia Artificial (IA)?**
+            if (msg.match(/derivada|calculo diferencial/)) {
+                return `**Derivadas en Calculo:**
 
-Es la capacidad de las máquinas para realizar tareas que normalmente requieren inteligencia humana.
+La derivada mide la tasa de cambio instantanea de una funcion.
 
-**Tipos de IA:**
-• **IA Débil (Narrow AI):** Diseñada para tareas específicas (Siri, Alexa, yo - Pisi 😊)
-• **IA General (AGI):** Igual a inteligencia humana (no existe aún)
-• **Superinteligencia:** Superior a humanos (teórica)
+**Notacion:**
+f'(x), dy/dx, df/dx, Df(x)
+
+**Definicion formal:**
+f'(x) = lim[h->0] (f(x+h) - f(x)) / h
+
+**Reglas basicas:**
+
+1. Constante: d/dx[c] = 0
+2. Potencia: d/dx[xn] = n*x(n-1)
+3. Suma: d/dx[f+g] = f' + g'
+4. Producto: d/dx[fg] = f'g + fg'
+5. Cociente: d/dx[f/g] = (f'g - fg') / g2
+6. Cadena: d/dx[f(g(x))] = f'(g(x)) * g'(x)
+
+**Derivadas comunes:**
+- d/dx[sin(x)] = cos(x)
+- d/dx[cos(x)] = -sin(x)
+- d/dx[ex] = ex
+- d/dx[ln(x)] = 1/x
+- d/dx[tan(x)] = sec2(x)
+
+**Aplicaciones:**
+- Velocidad y aceleracion
+- Optimizacion (maximos y minimos)
+- Analisis de graficas
+- Tasas de cambio en fisica e ingenieria`;
+            }
+
+            // ==================== GEOGRAFIA ====================
+
+            if (msg.match(/pais.*grande|paises.*grandes/)) {
+                return `**Paises mas grandes del mundo por superficie:**
+
+1. Rusia: 17,098,242 km2
+   - 11% de la tierra emergida
+   - 11 zonas horarias
+
+2. Canada: 9,984,670 km2
+   - Costa mas larga del mundo
+
+3. Estados Unidos: 9,833,517 km2
+   - Incluye Alaska y Hawaii
+
+4. China: 9,596,960 km2
+   - Pais mas poblado
+
+5. Brasil: 8,515,770 km2
+   - Mayor de America Latina
+
+6. Australia: 7,741,220 km2
+   - Unico pais-continente
+
+7. India: 3,287,263 km2
+   - Segunda mayor poblacion
+
+8. Argentina: 2,780,400 km2
+   - Mayor hispanohablante
+
+9. Kazajistan: 2,724,900 km2
+   - Mayor sin costa maritima
+
+10. Argelia: 2,381,741 km2
+    - Mayor de Africa
+
+**Datos adicionales:**
+- Mexico: puesto 13 con 1,964,375 km2
+- Espana: puesto 52 con 505,990 km2
+- Vaticano: mas pequeno con 0.44 km2`;
+            }
+
+            // ==================== TECNOLOGIA ====================
+
+            if (msg.match(/inteligencia artificial|que es ia/)) {
+                return `**Inteligencia Artificial (IA):**
+
+Sistema computacional capaz de realizar tareas que requieren inteligencia humana.
+
+**Tipos por capacidad:**
+- IA Estrecha (ANI): Tareas especificas (estado actual)
+- IA General (AGI): Capacidad humana (teorica)
+- Superinteligencia (ASI): Superior a humanos (hipotetica)
+
+**Metodologias principales:**
+- Machine Learning: Aprende de datos
+- Deep Learning: Redes neuronales multicapa
+- Reinforcement Learning: Aprende por recompensas
+- NLP: Procesamiento de lenguaje natural
 
 **Aplicaciones actuales:**
-✅ Asistentes virtuales
-✅ Reconocimiento facial
-✅ Diagnóstico médico
-✅ Vehículos autónomos
-✅ Generación de texto e imágenes
+- Asistentes virtuales
+- Reconocimiento facial
+- Diagnostico medico
+- Vehiculos autonomos
+- Generacion de contenido
+- Traduccion automatica
+- Sistemas de recomendacion
+- Deteccion de fraude
 
-**Tecnologías:**
-• Machine Learning
-• Deep Learning (redes neuronales)
-• Procesamiento de lenguaje natural`;
+**Historia clave:**
+- 1956: Termino acunado por John McCarthy
+- 1997: Deep Blue vence a Kasparov
+- 2011: Watson gana Jeopardy
+- 2016: AlphaGo derrota a Lee Sedol
+- 2022: ChatGPT marca nueva era de IA generativa
+
+**Preocupaciones:**
+- Perdida de empleos
+- Sesgo algoritmico
+- Privacidad
+- Seguridad`;
             }
 
-            // IDIOMAS
-            if (msg.match(/traducir|traduce|cómo se dice|como se dice/)) {
-                if (msg.match(/hola.*inglés|hola.*ingles/)) {
-                    return `🌍 **"Hola" en inglés:** Hello / Hi
+            // ==================== RESPUESTAS BASICAS ====================
 
-Otras formas:
-• Hey - informal
-• Good morning - Buenos días
-• Good afternoon - Buenas tardes
-• Good evening - Buenas noches
-• What's up? - ¿Qué tal? (muy informal)`;
-                }
-                if (msg.match(/gracias.*inglés|gracias.*ingles/)) {
-                    return `🌍 **"Gracias" en inglés:** Thank you / Thanks
-
-Variaciones:
-• Thanks a lot - Muchas gracias
-• Thank you so much - Muchísimas gracias
-• I appreciate it - Te lo agradezco
-• Cheers - Gracias (británico informal)`;
-                }
-                if (msg.match(/te amo.*inglés|te amo.*ingles|te quiero.*inglés|te quiero.*ingles/)) {
-                    return `💕 **Expresiones de amor en inglés:**
-• "Te amo" = I love you
-• "Te quiero" = I love you / I care about you
-• "Te extraño" = I miss you
-• "Eres especial" = You're special`;
-                }
+            if (msg.match(/hola|buenas|saludos/)) {
+                return 'Hola. Soy Pisi, tu asistente personal. Puedo responder preguntas sobre nutricion, ciencia, historia, matematicas, tecnologia y mas. Que necesitas saber?';
             }
 
-            // Saludos
-            if (msg.match(/hola|hey|buenas|saludos|qué tal|que tal/)) {
-                const saludos = [
-                    '¡Hola! 👋 ¿En qué puedo ayudarte hoy?',
-                    '¡Hey! 😊 ¿Qué necesitas?',
-                    '¡Buenas! Soy Pisi, tu asistente. ¿Cómo te ayudo?'
-                ];
-                return saludos[Math.floor(Math.random() * saludos.length)];
+            if (msg.match(/como te llamas|tu nombre|quien eres/)) {
+                return 'Soy Pisi, tu asistente personal de inteligencia artificial. Estoy disenado para responder preguntas de forma precisa y profesional sobre cualquier tema.';
             }
 
-            // Nombre
-            if (msg.match(/cómo te llamas|como te llamas|tu nombre|quién eres|quien eres/)) {
-                return '¡Soy Pisi! 🤖 Tu asistente personal privado. Estoy aquí para ayudarte con lo que necesites.';
+            if (msg.match(/que puedes|para que sirves/)) {
+                return `Soy un asistente experto que puede ayudarte con:
+
+- Nutricion: valores nutricionales, macros, vitaminas de cualquier alimento
+- Ciencia: fisica, quimica, biologia, astronomia
+- Historia: eventos historicos, fechas, contexto
+- Matematicas: formulas, teoremas, calculos
+- Tecnologia: conceptos tecnicos, programacion
+- Geografia: paises, capitales, datos demograficos
+- Salud: informacion medica general
+
+Pregunta lo que necesites y te dare una respuesta completa y precisa.`;
             }
 
-            // Capacidades
-            if (msg.match(/qué puedes|que puedes|qué haces|que haces|para qué sirves|para que sirves/)) {
-                return `¡Puedo ayudarte con muchas cosas! 🚀
-
-• 📚 Responder preguntas de cualquier tema
-• 🍎 Información nutricional
-• 🔬 Explicar conceptos de ciencia
-• 📐 Ayudar con matemáticas
-• 🌍 Datos de geografía e historia
-• 💻 Explicar tecnología
-• 💬 Conversar contigo
-
-¡Pregúntame lo que quieras! 😊`;
+            if (msg.match(/gracias/)) {
+                return 'De nada. Si tienes mas preguntas, aqui estoy para ayudarte.';
             }
 
-            // Chistes
-            if (msg.match(/chiste|gracioso|hazme reír|hazme reir|broma/)) {
-                const chistes = [
-                    '¿Por qué los programadores prefieren el frío? 🥶 Porque odian los bugs... ¡y en el calor hay más! 😂',
-                    '¿Qué le dice un bit a otro? Nos vemos en el bus 🚌😄',
-                    '¿Por qué el libro de matemáticas está triste? Porque tiene muchos problemas 📚😅',
-                    '¿Cómo se despiden los químicos? Ácido un placer 🧪😂',
-                    '¿Qué hace una abeja en el gimnasio? ¡Zum-ba! 🐝💪',
-                    '¿Por qué los pájaros no usan Facebook? Porque ya tienen Twitter 🐦😄',
-                    '¿Cuál es el colmo de un electricista? Que su esposa se llame Luz y sus hijos le sigan la corriente ⚡😂'
-                ];
-                return chistes[Math.floor(Math.random() * chistes.length)];
+            if (msg.match(/adios|hasta luego|bye|chao/)) {
+                return 'Hasta pronto. Cuando necesites informacion, aqui estare.';
             }
 
-            // Hora
-            if (msg.match(/hora|qué hora|que hora/)) {
-                const now = new Date();
-                return `🕐 Son las ${now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
+            // Hora y fecha
+            if (msg.match(/que hora|hora actual/)) {
+                return `Hora actual: ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
             }
 
-            // Fecha
-            if (msg.match(/fecha|qué día|que día|que dia|qué dia/)) {
-                const now = new Date();
-                return `📅 Hoy es ${now.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+            if (msg.match(/que dia|fecha actual|que fecha/)) {
+                return `Fecha actual: ${new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
             }
 
-            // Gracias
-            if (msg.match(/gracias|te lo agradezco|muy amable/)) {
-                const respuestas = [
-                    '¡De nada! 😊 Para eso estoy.',
-                    '¡Con gusto! Si necesitas algo más, aquí estaré 🤖',
-                    '¡No hay de qué! Me alegra poder ayudar 💜'
-                ];
-                return respuestas[Math.floor(Math.random() * respuestas.length)];
-            }
-
-            // Despedida
-            if (msg.match(/adiós|adios|bye|hasta luego|nos vemos|chao/)) {
-                return '¡Hasta pronto! 👋 Cuando me necesites, aquí estaré. ¡Cuídate mucho! 💜';
-            }
-
-            // Cómo estás
-            if (msg.match(/cómo estás|como estas|qué tal estás|que tal estas/)) {
-                return '¡Muy bien, gracias por preguntar! 😊 Siempre listo para ayudarte. ¿Y tú cómo estás?';
-            }
-
-            // Matemáticas básicas
-            if (msg.match(/cuánto es|cuanto es|calcula|suma|resta|multiplica|divide|\d+\s*[\+\-\*\/x]\s*\d+/)) {
+            // Calculos matematicos
+            if (msg.match(/cuanto es|calcula|\d+\s*[\+\-\*\/x]\s*\d+/)) {
                 try {
-                    // Extraer expresión matemática
                     let expr = msg.match(/[\d\+\-\*\/x\.\s\(\)]+/g);
                     if (expr) {
                         let mathExpr = expr.join('').replace(/x/g, '*').replace(/\s/g, '');
                         if (mathExpr.match(/^[\d\+\-\*\/\.\(\)]+$/)) {
                             const result = Function('"use strict"; return (' + mathExpr + ')')();
-                            return `🔢 ${mathExpr.replace(/\*/g, '×')} = **${result}**`;
+                            return `Resultado: ${mathExpr.replace(/\*/g, ' x ')} = ${result}`;
                         }
                     }
                 } catch (e) {}
             }
 
-            // Respuesta genérica mejorada
-            return `🤔 Interesante pregunta sobre "${message.substring(0, 40)}..."
+            return null;
+        }
 
-Déjame darte la mejor respuesta que puedo:
+        function getExtendedAnswer(message) {
+            return `No tengo informacion especifica sobre esa consulta en mi base de conocimientos actual.
 
-Aunque no tengo información específica sobre esto en mi base de conocimientos local, te sugiero:
+Puedo ayudarte con:
+- Nutricion (valores de alimentos, macros, vitaminas)
+- Ciencia (fisica, quimica, biologia, astronomia)
+- Historia (eventos, guerras, revoluciones)
+- Matematicas (formulas, teoremas)
+- Tecnologia (IA, programacion, conceptos)
+- Geografia (paises, datos)
 
-1. 🔍 Intenta reformular la pregunta con más detalle
-2. 📝 Pregúntame sobre temas específicos como:
-   • Nutrición y salud
-   • Ciencia y tecnología
-   • Historia y geografía
-   • Matemáticas
-
-¿Hay algo más específico que pueda ayudarte? 😊`;
+Reformula tu pregunta o consulta sobre estos temas.`;
         }
 
         function clearChat() {
             chatContainer.innerHTML = `
                 <div class="welcome" id="welcome">
-                    <div class="emoji">🤖</div>
-                    <h2>¡Hola! Soy Pisi</h2>
-                    <p>Tu asistente personal. Pregúntame lo que quieras.</p>
+                    <div class="icon">P</div>
+                    <h2>Hola, soy Pisi</h2>
+                    <p>Tu asistente personal. Puedo responder cualquier pregunta.</p>
                     <div class="suggestions">
-                        <div class="suggestion" onclick="askSuggestion('¿Qué puedes hacer?')">¿Qué puedes hacer?</div>
-                        <div class="suggestion" onclick="askSuggestion('Cuéntame un chiste')">Cuéntame un chiste</div>
-                        <div class="suggestion" onclick="askSuggestion('Dame un consejo')">Dame un consejo</div>
+                        <div class="suggestion" onclick="askSuggestion('Proteina en pechuga de pollo')">Nutricion</div>
+                        <div class="suggestion" onclick="askSuggestion('Teoria de la relatividad')">Ciencia</div>
+                        <div class="suggestion" onclick="askSuggestion('Segunda Guerra Mundial')">Historia</div>
                     </div>
                 </div>
             `;
             conversationHistory = [];
         }
 
-        // Registrar Service Worker para que funcione offline
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(() => {});
         }
