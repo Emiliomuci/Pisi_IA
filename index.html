@@ -2027,19 +2027,39 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
                 conversationHistory.push({ role: 'system', content: getSystemPrompt() });
             }
 
-            // Mensaje para el historial
+            // Mensaje para el historial - para imágenes, guardar solo descripción (no base64)
             let historyMessage;
             if (typeof apiMessage === 'object' && apiMessage.type === 'vision') {
-                historyMessage = { role: 'user', content: apiMessage.content };
+                // Guardar versión simplificada para el historial (sin base64 pesado)
+                const textContent = apiMessage.content.find(c => c.type === 'text');
+                const imageCount = apiMessage.content.filter(c => c.type === 'image_url').length;
+                historyMessage = { 
+                    role: 'user', 
+                    content: `[${imageCount} imagen(es) adjunta(s)]\n${textContent ? textContent.text : ''}` 
+                };
+                // Para la API, usar el contenido completo con imágenes
+                conversationHistory.push(historyMessage);
             } else {
                 historyMessage = { role: 'user', content: apiMessage };
+                conversationHistory.push(historyMessage);
             }
-            conversationHistory.push(historyMessage);
 
             showTyping('Procesando...');
 
             try {
-                const response = await callGroqAPI(conversationHistory);
+                // Si hay imágenes, enviar mensaje especial a la API
+                let messagesToSend;
+                if (typeof apiMessage === 'object' && apiMessage.type === 'vision') {
+                    // Crear copia del historial con la última entrada siendo el mensaje con imagen
+                    messagesToSend = [
+                        ...conversationHistory.slice(0, -1),
+                        { role: 'user', content: apiMessage.content }
+                    ];
+                } else {
+                    messagesToSend = conversationHistory;
+                }
+
+                const response = await callGroqAPI(messagesToSend);
                 hideTyping();
                 
                 if (response.error) {
