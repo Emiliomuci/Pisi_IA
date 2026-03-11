@@ -1209,6 +1209,7 @@
         const CURRENT_CONV_KEY = 'pisi_current_conv';
         const MAX_CONVERSATIONS = 10;
         const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        const MAX_CONTENT_CHARS = 20000; // Límite de caracteres para evitar exceder tokens de API
 
         let config = loadConfig();
         let conversationHistory = [];
@@ -2067,9 +2068,14 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
 
                 if (fileAttachments.length > 0) {
                     // Para archivos de texto, incluir el contenido
-                    const fileContents = fileAttachments.map(file => 
+                    let fileContents = fileAttachments.map(file => 
                         `--- Contenido del archivo "${file.name}" ---\n${file.data}\n--- Fin del archivo ---`
                     ).join('\n\n');
+                    
+                    // Truncar si es muy largo para evitar exceder límite de tokens
+                    if (fileContents.length > MAX_CONTENT_CHARS) {
+                        fileContents = fileContents.substring(0, MAX_CONTENT_CHARS) + '\n\n[... CONTENIDO TRUNCADO - El archivo es muy largo. Se muestran los primeros ' + Math.round(MAX_CONTENT_CHARS/1000) + 'K caracteres ...]';
+                    }
                     
                     if (typeof apiMessage === 'object') {
                         // Ya hay imagen, agregar texto del archivo
