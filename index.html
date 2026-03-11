@@ -1387,7 +1387,16 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
             // Obtener el primer mensaje del usuario como título
             const firstUserMsg = messages.find(m => m.role === 'user');
             if (firstUserMsg) {
-                return firstUserMsg.content.substring(0, 50) + (firstUserMsg.content.length > 50 ? '...' : '');
+                // Manejar contenido que puede ser string o array (para imágenes)
+                let text = '';
+                if (typeof firstUserMsg.content === 'string') {
+                    text = firstUserMsg.content;
+                } else if (Array.isArray(firstUserMsg.content)) {
+                    // Buscar el texto en el array de contenido
+                    const textContent = firstUserMsg.content.find(c => c.type === 'text');
+                    text = textContent ? textContent.text : 'Imagen adjunta';
+                }
+                return text.substring(0, 50) + (text.length > 50 ? '...' : '');
             }
             return 'Nueva conversacion';
         }
