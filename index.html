@@ -1763,18 +1763,24 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
                 }
             });
 
-            // Soporte para pegar imágenes
-            userInput.addEventListener('paste', handlePaste);
+            // Soporte para pegar imágenes (solo en document para evitar duplicados)
             document.addEventListener('paste', handlePaste);
         }
 
+        let lastPasteTime = 0;
         function handlePaste(e) {
+            // Evitar duplicados
+            const now = Date.now();
+            if (now - lastPasteTime < 100) return;
+            lastPasteTime = now;
+
             const items = e.clipboardData?.items;
             if (!items) return;
 
             for (let i = 0; i < items.length; i++) {
                 if (items[i].type.indexOf('image') !== -1) {
                     e.preventDefault();
+                    e.stopPropagation();
                     const file = items[i].getAsFile();
                     if (file) {
                         processImageFile(file);
