@@ -1114,11 +1114,11 @@
             </div>
             <div class="attach-option file" onclick="selectFile()">
                 <div class="icon">📄</div>
-                <span>Documento</span>
+                <span>Archivo de texto</span>
             </div>
         </div>
         <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoSelect(event)">
-        <input type="file" id="fileInput" accept=".txt,.pdf,.doc,.docx,.csv,.json,.xml,.md" style="display:none" onchange="handleFileSelect(event)">
+        <input type="file" id="fileInput" accept=".txt,.csv,.json,.xml,.md,.html,.css,.js,.py,.java,.c,.cpp,.h,.sql,.log" style="display:none" onchange="handleFileSelect(event)">
     </div>
 
     <div class="modal" id="settingsModal">
@@ -1680,14 +1680,37 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
             const file = event.target.files[0];
             if (!file) return;
 
+            // Verificar extensión
+            const ext = file.name.split('.').pop().toLowerCase();
+            const textExtensions = ['txt', 'csv', 'json', 'xml', 'md', 'html', 'css', 'js', 'py', 'java', 'c', 'cpp', 'h', 'sql', 'log', 'yaml', 'yml'];
+            
+            if (!textExtensions.includes(ext)) {
+                alert(`Los archivos .${ext} no son soportados.\n\nSolo puedo leer archivos de texto como:\n- .txt, .md, .csv, .json\n- .html, .css, .js, .py\n- .java, .sql, .xml\n\nPara PDFs o Word, copia el texto y pégalo directamente.`);
+                event.target.value = '';
+                return;
+            }
+
             if (file.size > MAX_FILE_SIZE) {
                 alert('El archivo es muy grande. Maximo 5MB.');
+                event.target.value = '';
                 return;
             }
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const content = e.target.result;
+                let content = e.target.result;
+                
+                // Verificar si parece ser binario (muchos caracteres no imprimibles)
+                const nonPrintable = content.slice(0, 500).split('').filter(c => {
+                    const code = c.charCodeAt(0);
+                    return code < 32 && code !== 9 && code !== 10 && code !== 13;
+                }).length;
+                
+                if (nonPrintable > 10) {
+                    alert('Este archivo parece ser binario y no se puede leer como texto.\n\nPara PDFs o documentos de Word, copia el texto y pégalo directamente.');
+                    return;
+                }
+                
                 pendingAttachments.push({
                     type: 'file',
                     name: file.name,
