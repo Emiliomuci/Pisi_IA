@@ -9,6 +9,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Pisi">
     <link rel="manifest" href="manifest.json">
+    <!-- PDF.js para leer PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -1118,7 +1120,7 @@
             </div>
         </div>
         <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoSelect(event)">
-        <input type="file" id="fileInput" accept=".txt,.csv,.json,.xml,.md,.html,.css,.js,.py,.java,.c,.cpp,.h,.sql,.log" style="display:none" onchange="handleFileSelect(event)">
+        <input type="file" id="fileInput" accept=".txt,.csv,.json,.xml,.md,.html,.css,.js,.py,.java,.c,.cpp,.h,.sql,.log,.pdf" style="display:none" onchange="handleFileSelect(event)">
     </div>
 
     <div class="modal" id="settingsModal">
@@ -1684,14 +1686,21 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
             const ext = file.name.split('.').pop().toLowerCase();
             const textExtensions = ['txt', 'csv', 'json', 'xml', 'md', 'html', 'css', 'js', 'py', 'java', 'c', 'cpp', 'h', 'sql', 'log', 'yaml', 'yml'];
             
-            if (!textExtensions.includes(ext)) {
-                alert(`Los archivos .${ext} no son soportados.\n\nSolo puedo leer archivos de texto como:\n- .txt, .md, .csv, .json\n- .html, .css, .js, .py\n- .java, .sql, .xml\n\nPara PDFs o Word, copia el texto y pégalo directamente.`);
+            if (file.size > MAX_FILE_SIZE) {
+                alert('El archivo es muy grande. Maximo 5MB.');
                 event.target.value = '';
                 return;
             }
 
-            if (file.size > MAX_FILE_SIZE) {
-                alert('El archivo es muy grande. Maximo 5MB.');
+            // Manejar PDFs
+            if (ext === 'pdf') {
+                handlePdfFile(file);
+                event.target.value = '';
+                return;
+            }
+
+            if (!textExtensions.includes(ext)) {
+                alert(`Los archivos .${ext} no son soportados.\n\nArchivos soportados:\n- PDF\n- Texto: .txt, .md, .csv, .json\n- Código: .html, .css, .js, .py, .java`);
                 event.target.value = '';
                 return;
             }
@@ -1707,7 +1716,7 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
                 }).length;
                 
                 if (nonPrintable > 10) {
-                    alert('Este archivo parece ser binario y no se puede leer como texto.\n\nPara PDFs o documentos de Word, copia el texto y pégalo directamente.');
+                    alert('Este archivo parece ser binario y no se puede leer.');
                     return;
                 }
                 
@@ -1722,6 +1731,60 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
             };
             reader.readAsText(file);
             event.target.value = '';
+        }
+
+        // Función para leer PDFs
+        async function handlePdfFile(file) {
+            try {
+                // Mostrar indicador de carga
+                const preview = document.getElementById('attachmentsPreview');
+                preview.classList.add('active');
+                preview.innerHTML = '<div class="attachment-item"><div class="file-icon">⏳</div><div class="file-info"><div class="file-name">Leyendo PDF...</div></div></div>';
+
+                // Configurar worker de pdf.js
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+                // Leer el archivo como ArrayBuffer
+                const arrayBuffer = await file.arrayBuffer();
+                
+                // Cargar el PDF
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                
+                let fullText = '';
+                const totalPages = pdf.numPages;
+
+                // Extraer texto de cada página
+                for (let i = 1; i <= totalPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += `--- Página ${i} ---\n${pageText}\n\n`;
+                }
+
+                if (fullText.trim().length < 50) {
+                    alert('No se pudo extraer texto del PDF. Puede ser un PDF escaneado (imagen). Intenta con una captura de pantalla.');
+                    preview.classList.remove('active');
+                    preview.innerHTML = '';
+                    return;
+                }
+
+                pendingAttachments.push({
+                    type: 'file',
+                    name: file.name,
+                    size: file.size,
+                    data: fullText,
+                    mimeType: 'application/pdf',
+                    pages: totalPages
+                });
+                renderAttachmentsPreview();
+
+            } catch (error) {
+                console.error('Error leyendo PDF:', error);
+                alert('Error al leer el PDF. Intenta con otro archivo.');
+                const preview = document.getElementById('attachmentsPreview');
+                preview.classList.remove('active');
+                preview.innerHTML = '';
+            }
         }
 
         function renderAttachmentsPreview() {
@@ -1743,11 +1806,14 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
                         </div>
                     `;
                 } else {
+                    const isPdf = att.name.toLowerCase().endsWith('.pdf');
+                    const icon = isPdf ? '📕' : '📄';
+                    const extra = att.pages ? ` (${att.pages} pág)` : '';
                     return `
                         <div class="attachment-item">
-                            <div class="file-icon">📄</div>
+                            <div class="file-icon">${icon}</div>
                             <div class="file-info">
-                                <div class="file-name">${escapeHtml(att.name)}</div>
+                                <div class="file-name">${escapeHtml(att.name)}${extra}</div>
                                 <div class="file-size">${formatFileSize(att.size)}</div>
                             </div>
                             <button class="attachment-remove" onclick="removeAttachment(${index})">×</button>
