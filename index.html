@@ -297,6 +297,194 @@
         .send-btn:hover { transform: scale(1.05); }
         .send-btn:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
 
+        /* Botón de adjuntar archivos */
+        .attach-btn {
+            position: absolute;
+            left: 6px;
+            bottom: 6px;
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .attach-btn:hover {
+            background: rgba(99,102,241,0.1);
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+
+        .input-container textarea {
+            padding-left: 50px;
+        }
+
+        /* Preview de archivos adjuntos */
+        .attachments-preview {
+            display: none;
+            padding: 8px 16px;
+            background: rgba(10,10,18,0.98);
+            border-bottom: 1px solid var(--border);
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .attachments-preview.active {
+            display: flex;
+        }
+
+        .attachment-item {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 200px;
+        }
+
+        .attachment-item.image {
+            padding: 4px;
+        }
+
+        .attachment-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .attachment-item .file-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(99,102,241,0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .attachment-item .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .attachment-item .file-name {
+            font-size: 12px;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .attachment-item .file-size {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .attachment-remove {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            border: none;
+            border-radius: 50%;
+            background: #ef4444;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Menú de opciones de adjuntar */
+        .attach-menu {
+            display: none;
+            position: absolute;
+            bottom: 60px;
+            left: 16px;
+            background: #1a1a24;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+            z-index: 100;
+            min-width: 180px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .attach-menu.active {
+            display: block;
+        }
+
+        .attach-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .attach-option:hover {
+            background: rgba(99,102,241,0.1);
+        }
+
+        .attach-option .icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .attach-option.photo .icon {
+            background: rgba(34,197,94,0.15);
+            color: #22c55e;
+        }
+
+        .attach-option.file .icon {
+            background: rgba(59,130,246,0.15);
+            color: #3b82f6;
+        }
+
+        /* Imagen en mensajes */
+        .message-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .message-file {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
         .welcome {
             text-align: center;
             padding: 40px 20px;
@@ -907,8 +1095,10 @@
         </div>
     </div>
 
+    <div class="attachments-preview" id="attachmentsPreview"></div>
     <div class="input-container">
         <div class="input-wrapper">
+            <button class="attach-btn" onclick="toggleAttachMenu()" id="attachBtn">+</button>
             <textarea id="userInput" placeholder="Escribe tu mensaje..." rows="1"></textarea>
             <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -917,6 +1107,18 @@
                 </svg>
             </button>
         </div>
+        <div class="attach-menu" id="attachMenu">
+            <div class="attach-option photo" onclick="selectPhoto()">
+                <div class="icon">📷</div>
+                <span>Foto o imagen</span>
+            </div>
+            <div class="attach-option file" onclick="selectFile()">
+                <div class="icon">📄</div>
+                <span>Documento</span>
+            </div>
+        </div>
+        <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoSelect(event)">
+        <input type="file" id="fileInput" accept=".txt,.pdf,.doc,.docx,.csv,.json,.xml,.md" style="display:none" onchange="handleFileSelect(event)">
     </div>
 
     <div class="modal" id="settingsModal">
@@ -935,12 +1137,14 @@
                 <label>Modelo de IA</label>
                 <select id="settingsModel" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);color:#fff;font-size:14px;outline:none;">
                     <option value="moonshotai/kimi-k2-instruct">Kimi K2 (Recomendado)</option>
+                    <option value="meta-llama/llama-4-scout-17b-16e-instruct">Llama 4 Scout (Vision)</option>
                     <option value="llama-3.3-70b-versatile">Llama 3.3 70B</option>
                     <option value="llama-3.1-8b-instant">Llama 3.1 8B (Rapido)</option>
                     <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
                     <option value="gemma2-9b-it">Gemma 2 9B</option>
                     <option value="compound-beta">Compound Beta (Agente)</option>
                 </select>
+                <p class="info-text">Llama 4 Scout puede analizar imagenes</p>
             </div>
 
             <div class="modal-field">
@@ -1002,10 +1206,12 @@
         const CONVS_KEY = 'pisi_conversations';
         const CURRENT_CONV_KEY = 'pisi_current_conv';
         const MAX_CONVERSATIONS = 10;
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
         let config = loadConfig();
         let conversationHistory = [];
         let currentConvId = null;
+        let pendingAttachments = []; // Archivos pendientes de enviar
         let isProcessing = false;
         let secretTapCount = 0;
         let secretTapTimer = null;
@@ -1430,6 +1636,137 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
             }
         }
 
+        // =====================================================
+        // SISTEMA DE ARCHIVOS E IMAGENES
+        // =====================================================
+
+        function toggleAttachMenu() {
+            const menu = document.getElementById('attachMenu');
+            menu.classList.toggle('active');
+        }
+
+        function closeAttachMenu() {
+            document.getElementById('attachMenu').classList.remove('active');
+        }
+
+        function selectPhoto() {
+            closeAttachMenu();
+            document.getElementById('photoInput').click();
+        }
+
+        function selectFile() {
+            closeAttachMenu();
+            document.getElementById('fileInput').click();
+        }
+
+        function handlePhotoSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > MAX_FILE_SIZE) {
+                alert('La imagen es muy grande. Maximo 5MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                pendingAttachments.push({
+                    type: 'image',
+                    name: file.name,
+                    size: file.size,
+                    data: base64,
+                    mimeType: file.type
+                });
+                renderAttachmentsPreview();
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > MAX_FILE_SIZE) {
+                alert('El archivo es muy grande. Maximo 5MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                pendingAttachments.push({
+                    type: 'file',
+                    name: file.name,
+                    size: file.size,
+                    data: content,
+                    mimeType: file.type
+                });
+                renderAttachmentsPreview();
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function renderAttachmentsPreview() {
+            const preview = document.getElementById('attachmentsPreview');
+            
+            if (pendingAttachments.length === 0) {
+                preview.classList.remove('active');
+                preview.innerHTML = '';
+                return;
+            }
+
+            preview.classList.add('active');
+            preview.innerHTML = pendingAttachments.map((att, index) => {
+                if (att.type === 'image') {
+                    return `
+                        <div class="attachment-item image">
+                            <img src="${att.data}" alt="${att.name}">
+                            <button class="attachment-remove" onclick="removeAttachment(${index})">×</button>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="attachment-item">
+                            <div class="file-icon">📄</div>
+                            <div class="file-info">
+                                <div class="file-name">${escapeHtml(att.name)}</div>
+                                <div class="file-size">${formatFileSize(att.size)}</div>
+                            </div>
+                            <button class="attachment-remove" onclick="removeAttachment(${index})">×</button>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        function removeAttachment(index) {
+            pendingAttachments.splice(index, 1);
+            renderAttachmentsPreview();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        function clearAttachments() {
+            pendingAttachments = [];
+            renderAttachmentsPreview();
+        }
+
+        // Cerrar menu al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('attachMenu');
+            const btn = document.getElementById('attachBtn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                closeAttachMenu();
+            }
+        });
+
         function setupTextarea() {
             userInput.addEventListener('input', function() {
                 this.style.height = 'auto';
@@ -1546,7 +1883,10 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
 
         async function sendMessage() {
             const message = userInput.value.trim();
-            if (!message || isProcessing) return;
+            const hasAttachments = pendingAttachments.length > 0;
+            
+            if (!message && !hasAttachments) return;
+            if (isProcessing) return;
 
             // Verificar API key
             if (!config.apiKey || !config.apiKey.startsWith('gsk_')) {
@@ -1560,16 +1900,81 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
             userInput.style.height = 'auto';
             sendBtn.disabled = true;
 
-            renderMessage(message, true);
+            // Copiar attachments antes de limpiar
+            const attachments = [...pendingAttachments];
+            clearAttachments();
+
+            // Construir mensaje con attachments
+            let displayMessage = message;
+            let apiMessage = message;
+
+            // Procesar archivos adjuntos
+            if (attachments.length > 0) {
+                const imageAttachments = attachments.filter(a => a.type === 'image');
+                const fileAttachments = attachments.filter(a => a.type === 'file');
+
+                // Mostrar mensaje con imágenes
+                renderMessageWithAttachments(message, attachments);
+
+                // Construir mensaje para la API
+                if (imageAttachments.length > 0) {
+                    // Para imágenes, usar formato multimodal si el modelo lo soporta
+                    if (config.model.includes('llama-4') || config.model.includes('scout')) {
+                        // Formato vision API
+                        const imageContent = imageAttachments.map(img => ({
+                            type: 'image_url',
+                            image_url: { url: img.data }
+                        }));
+                        
+                        apiMessage = {
+                            type: 'vision',
+                            content: [
+                                { type: 'text', text: message || 'Describe y analiza esta imagen en detalle' },
+                                ...imageContent
+                            ]
+                        };
+                    } else {
+                        // Modelo sin visión - informar al usuario
+                        apiMessage = `[El usuario ha adjuntado ${imageAttachments.length} imagen(es): ${imageAttachments.map(i => i.name).join(', ')}]\n\nNota: El modelo actual (${getModelShortName(config.model)}) no puede procesar imagenes. Cambia a "Llama 4 Scout" en ajustes para analisis de imagenes.\n\n${message || ''}`;
+                    }
+                }
+
+                if (fileAttachments.length > 0) {
+                    // Para archivos de texto, incluir el contenido
+                    const fileContents = fileAttachments.map(file => 
+                        `--- Contenido del archivo "${file.name}" ---\n${file.data}\n--- Fin del archivo ---`
+                    ).join('\n\n');
+                    
+                    if (typeof apiMessage === 'object') {
+                        // Ya hay imagen, agregar texto del archivo
+                        apiMessage.content[0].text += `\n\n${fileContents}`;
+                    } else {
+                        apiMessage = `${fileContents}\n\n${message || 'Analiza este archivo'}`;
+                    }
+                }
+            } else {
+                renderMessage(message, true);
+            }
             
-            // Guardar prompt en historial
-            savePrompt(message);
+            // Guardar prompt en historial (solo texto)
+            const promptToSave = typeof apiMessage === 'object' 
+                ? apiMessage.content[0].text 
+                : apiMessage;
+            savePrompt(promptToSave);
             
             // Agregar al historial
             if (conversationHistory.length === 0) {
                 conversationHistory.push({ role: 'system', content: getSystemPrompt() });
             }
-            conversationHistory.push({ role: 'user', content: message });
+
+            // Mensaje para el historial
+            let historyMessage;
+            if (typeof apiMessage === 'object' && apiMessage.type === 'vision') {
+                historyMessage = { role: 'user', content: apiMessage.content };
+            } else {
+                historyMessage = { role: 'user', content: apiMessage };
+            }
+            conversationHistory.push(historyMessage);
 
             showTyping('Procesando...');
 
@@ -1598,6 +2003,30 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
             userInput.focus();
         }
 
+        function renderMessageWithAttachments(text, attachments) {
+            if (welcome) welcome.style.display = 'none';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            
+            let attachmentsHtml = '';
+            attachments.forEach(att => {
+                if (att.type === 'image') {
+                    attachmentsHtml += `<img src="${att.data}" class="message-image" alt="${att.name}">`;
+                } else {
+                    attachmentsHtml += `<div class="message-file">📄 ${escapeHtml(att.name)}</div>`;
+                }
+            });
+
+            messageDiv.innerHTML = `
+                <div class="message-content">${text ? escapeHtml(text) : ''}</div>
+                ${attachmentsHtml}
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
         function getSystemPrompt() {
             let prompt = PISI_SYSTEM_PROMPT;
             if (config.userName) {
@@ -1609,6 +2038,7 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
         function getModelShortName(model) {
             const names = {
                 'moonshotai/kimi-k2-instruct': 'Kimi K2',
+                'meta-llama/llama-4-scout-17b-16e-instruct': 'Llama 4 Scout',
                 'llama-3.3-70b-versatile': 'Llama 3.3',
                 'llama-3.1-8b-instant': 'Llama 3.1',
                 'mixtral-8x7b-32768': 'Mixtral',
