@@ -1661,26 +1661,9 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
 
         function handlePhotoSelect(event) {
             const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.size > MAX_FILE_SIZE) {
-                alert('La imagen es muy grande. Maximo 5MB.');
-                return;
+            if (file) {
+                processImageFile(file);
             }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
-                pendingAttachments.push({
-                    type: 'image',
-                    name: file.name,
-                    size: file.size,
-                    data: base64,
-                    mimeType: file.type
-                });
-                renderAttachmentsPreview();
-            };
-            reader.readAsDataURL(file);
             event.target.value = '';
         }
 
@@ -1779,6 +1762,47 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
                     sendMessage();
                 }
             });
+
+            // Soporte para pegar imágenes
+            userInput.addEventListener('paste', handlePaste);
+            document.addEventListener('paste', handlePaste);
+        }
+
+        function handlePaste(e) {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    e.preventDefault();
+                    const file = items[i].getAsFile();
+                    if (file) {
+                        processImageFile(file);
+                    }
+                    break;
+                }
+            }
+        }
+
+        function processImageFile(file) {
+            if (file.size > MAX_FILE_SIZE) {
+                alert('La imagen es muy grande. Maximo 5MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                pendingAttachments.push({
+                    type: 'image',
+                    name: file.name || 'imagen_pegada.png',
+                    size: file.size,
+                    data: base64,
+                    mimeType: file.type
+                });
+                renderAttachmentsPreview();
+            };
+            reader.readAsDataURL(file);
         }
 
         function askSuggestion(text) {
@@ -1918,25 +1942,23 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
 
                 // Construir mensaje para la API
                 if (imageAttachments.length > 0) {
-                    // Para imágenes, usar formato multimodal si el modelo lo soporta
-                    if (config.model.includes('llama-4') || config.model.includes('scout')) {
-                        // Formato vision API
-                        const imageContent = imageAttachments.map(img => ({
-                            type: 'image_url',
-                            image_url: { url: img.data }
-                        }));
-                        
-                        apiMessage = {
-                            type: 'vision',
-                            content: [
-                                { type: 'text', text: message || 'Describe y analiza esta imagen en detalle' },
-                                ...imageContent
-                            ]
-                        };
-                    } else {
-                        // Modelo sin visión - informar al usuario
-                        apiMessage = `[El usuario ha adjuntado ${imageAttachments.length} imagen(es): ${imageAttachments.map(i => i.name).join(', ')}]\n\nNota: El modelo actual (${getModelShortName(config.model)}) no puede procesar imagenes. Cambia a "Llama 4 Scout" en ajustes para analisis de imagenes.\n\n${message || ''}`;
-                    }
+                    // Usar modelo con visión para imágenes
+                    const visionModel = 'meta-llama/llama-4-scout-17b-16e-instruct';
+                    
+                    // Formato vision API de Groq
+                    const imageContent = imageAttachments.map(img => ({
+                        type: 'image_url',
+                        image_url: { url: img.data }
+                    }));
+                    
+                    apiMessage = {
+                        type: 'vision',
+                        model: visionModel,
+                        content: [
+                            { type: 'text', text: message || 'Describe y analiza esta imagen en detalle. Si hay texto, transcribelo.' },
+                            ...imageContent
+                        ]
+                    };
                 }
 
                 if (fileAttachments.length > 0) {
@@ -2052,7 +2074,18 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
         // API DE GROQ
         // =====================================================
 
-        async function callGroqAPI(messages) {
+        async function callGroqAPI(messages, overrideModel = null) {
+            // Detectar si hay mensajes con imágenes
+            const hasVisionContent = messages.some(m => 
+                Array.isArray(m.content) && m.content.some(c => c.type === 'image_url')
+            );
+            
+            // Usar modelo de visión si hay imágenes
+            let modelToUse = overrideModel || config.model;
+            if (hasVisionContent) {
+                modelToUse = 'meta-llama/llama-4-scout-17b-16e-instruct';
+            }
+
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -2060,7 +2093,7 @@ Recuerda: eres Pisi, no un asistente generico. Tienes identidad propia.`;
                     'Authorization': `Bearer ${config.apiKey}`
                 },
                 body: JSON.stringify({
-                    model: config.model,
+                    model: modelToUse,
                     messages: messages,
                     temperature: 0.7,
                     max_tokens: 2048,
